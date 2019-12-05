@@ -19,10 +19,6 @@ namespace TestProgram1
         protected ChangeBuffer MessageBuffer;
         protected Game Game;
 
-        public Stopwatch FrameWatch { get; set; }
-
-       
-
         SpriteBatch spriteBatch;
         Texture2D ParticleTexture;
 
@@ -31,9 +27,6 @@ namespace TestProgram1
             DoubleBuffer = doubleBuffer;
             Game = game;
             RenderDataObjects = new List<RenderData>();
-
-            FrameWatch = new Stopwatch();
-            FrameWatch.Reset();
         }
 
         public virtual void LoadContent()
@@ -41,16 +34,11 @@ namespace TestProgram1
             ParticleTexture = Game.Content.Load<Texture2D>("diamond");
             spriteBatch = new SpriteBatch(Game.GraphicsDevice);
         }
-
-        public void DoFrame()
-        {
-            DoubleBuffer.StartRenderProcessing(out MessageBuffer, out GameTime);
-            Draw(GameTime);
-            DoubleBuffer.SubmitRender();
-        }
-
+        
         public void Draw(GameTime gameTime)
         {
+            
+
             foreach (ChangeMessage msg in MessageBuffer.Messages)
             {
                 switch (msg.MessageType)
@@ -77,6 +65,9 @@ namespace TestProgram1
                         break;
 
                     case ChangeMessageType.DeleteRenderData:
+                        {
+                            RenderDataObjects.RemoveAt(msg.ID);
+                        }
                         break;
                 }
             }
@@ -87,6 +78,13 @@ namespace TestProgram1
                 spriteBatch.Draw(ParticleTexture, renderData.Position, renderData.Color);
             }
             spriteBatch.End();
+        }
+
+        public void DoFrame()
+        {
+            DoubleBuffer.StartRenderProcessing(out MessageBuffer, out GameTime);
+            Draw(GameTime);
+            DoubleBuffer.SubmitRender();
         }
     }
 }
