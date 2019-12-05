@@ -42,12 +42,23 @@ namespace TestProgram1
             {
                 ParticleData gameData = ParticleDataObjects[i];
                 gameData.CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-
+                gameData.Velocity.Y += gameData.Gravity;
                 Vector2 newPos = gameData.Position + gameData.Velocity;
-                float Rot = gameData.Rotation + 3f;               
-                
+                float Rot = gameData.Rotation + 3f;
+                float newScale = gameData.Scale;
+                float transparency = gameData.StartingTransparency;
+
+
+
                 float percTime = gameData.CurrentTime / gameData.MaxTime;
                 Color newCol = Color.Lerp(gameData.StartColor, gameData.EndColor, percTime);
+
+                if (gameData.Shrink == true)
+                    newScale = MathHelper.Lerp(gameData.Scale, 0, percTime);
+
+                if (gameData.Fade == true)
+                    transparency = MathHelper.Lerp(gameData.StartingTransparency, 0, percTime);
+
 
                 ChangeMessage msg = new ChangeMessage()
                 {
@@ -69,6 +80,8 @@ namespace TestProgram1
                     msg.Position = newPos;                    
                     msg.Rotation = Rot;
                     msg.Color = newCol;
+                    msg.Scale = newScale;
+                    msg.Transparency = transparency;
                     MessageBuffer.Add(msg);
 
                     gameData.Position = newPos;
@@ -78,13 +91,16 @@ namespace TestProgram1
             }
         }
 
-        public void AddParticle(Vector2 pos, Vector2 angleRange, Vector2 speedRange, Color startColor, Color endColor, out ParticleData gameData, out RenderData renderData)
+        public void AddParticle(Vector2 pos, Vector2 angleRange, Vector2 speedRange, Vector2 scaleRange, 
+            Color startColor, Color endColor, float gravity, bool shrink, bool fade,
+            out ParticleData gameData, out RenderData renderData)
         {
-            float myAngle, mySpeed;
+            float myAngle, mySpeed, myScale;
             Vector2 Direction, myVelocity;
 
             mySpeed = (float)DoubleRange(speedRange.X, speedRange.Y);
             myAngle = -MathHelper.ToRadians((float)DoubleRange(angleRange.X, angleRange.Y));
+            myScale = (float)DoubleRange(scaleRange.X, scaleRange.Y);
 
             
             Direction.X = (float)Math.Cos(myAngle);
@@ -101,13 +117,20 @@ namespace TestProgram1
                 Velocity = myVelocity,
                 StartColor = startColor,
                 EndColor = endColor,
+                Gravity = gravity,
+                Scale = myScale,
+                Shrink = shrink,
+                Fade = fade,
+                StartingTransparency = 1f
             };
 
             renderData = new RenderData()
             {
                 Position = gameData.Position,
                 Color = startColor,
-                Rotation = Random.Next(0, 360)
+                Rotation = Random.Next(0, 360),
+                Scale = myScale,
+                Transparency = 0.5f
             };
         }
 

@@ -27,5 +27,11 @@ namespace TestProgram1
         
         [FieldOffset(24)]
         public float Velocity;
+
+        [FieldOffset(28)]
+        public float Scale;
+
+        [FieldOffset(32)]
+        public float Transparency;
     }
 }

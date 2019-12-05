@@ -79,11 +79,14 @@ namespace TestProgram1
         {
             CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if (CurrentTime > 500)
+            if (CurrentTime > 15)
             {
-                for (int i = 0; i < 200; i++)
+                for (int i = 0; i < 250; i++)
                 {
-                    UpdateManager.AddParticle(new Vector2(1920/2, 1080/2), new Vector2(0, 360), new Vector2(2, 5), Color.Yellow, Color.Purple, out gameData, out renderData);
+                    UpdateManager.AddParticle(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), new Vector2(0, 360), new Vector2(2, 3), 
+                        new Vector2(2, 2), Color.Yellow, Color.Purple, 0.2f,
+                        true, false, out gameData, out renderData);
+
                     RenderManager.RenderDataObjects.Add(renderData);
                     UpdateManager.ParticleDataObjects.Add(gameData);
                 }
