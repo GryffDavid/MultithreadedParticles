@@ -16,7 +16,8 @@ namespace TestProgram1
             CurrentTime, MaxTime,
             FadeDelay, CurrentFadeDelay,
             CurrentScale, MaxScale,
-            Gravity, StartingTransparency;
-        public bool Active, Shrink, Grow, Fade, RotateVelocity;
+            Gravity, StartingTransparency,
+            BounceY;
+        public bool Active, Shrink, Grow, Fade, RotateVelocity, CanBounce, StopBounce, HardBounce, HasBounced;
     }
 }

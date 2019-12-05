@@ -208,6 +208,7 @@ namespace TestProgram1
                             Texture, Position, AngleRange, SpeedRange, ScaleRange, StartColor, EndColor, 
                             Gravity, Shrink, Fade, StartingRotationRange, RotationIncrementRange, 
                             Transparency, TimeRange, Grow, RotateVelocity, Friction, Orientation, FadeDelay,
+                            YRange, CanBounce, StopBounce, HardBounce,
                             out gameData, out renderData);
 
                     RenderManager.RenderDataObjects.Add(renderData);

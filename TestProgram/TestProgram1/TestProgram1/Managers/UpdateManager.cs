@@ -53,6 +53,8 @@ namespace TestProgram1
                 
                 gameData.Velocity.Y += gameData.Gravity;
 
+                
+
                 if (gameData.Friction != new Vector2(0, 0))
                 {
                     gameData.Velocity.Y = MathHelper.Lerp(gameData.Velocity.Y, 0, gameData.Friction.Y * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f));
@@ -68,8 +70,53 @@ namespace TestProgram1
                 }
                 else
                 {
-                    Rot = gameData.Rotation + MathHelper.ToRadians(gameData.RotationIncrement);
+                    Rot = gameData.Rotation + MathHelper.ToRadians(gameData.RotationIncrement) * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f);
                 }
+
+                #region Handle bouncing
+                if (gameData.CanBounce == true)
+                    if (gameData.Position.Y >= gameData.BounceY && gameData.HasBounced == false)
+                    {
+                        if (gameData.HardBounce == true)
+                            gameData.Position.Y -= gameData.Velocity.Y;
+
+                        gameData.Velocity.Y = (-gameData.Velocity.Y / 3);
+                        gameData.Velocity.X = (gameData.Velocity.X / 3);
+                        gameData.RotationIncrement = (gameData.RotationIncrement * 3);
+                        gameData.HasBounced = true;
+                    }
+
+                if (gameData.StopBounce == true &&
+                    gameData.HasBounced == true &&
+                    gameData.Position.Y > gameData.BounceY)
+                {
+                    gameData.Velocity.Y = (-gameData.Velocity.Y / 2);
+
+                    gameData.Velocity.X *= 0.9f;
+
+                    gameData.RotationIncrement = MathHelper.Lerp(gameData.RotationIncrement, 0, 0.2f * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f));
+
+                    if (gameData.Velocity.Y < 0.2f && gameData.Velocity.Y > 0)
+                    {
+                        gameData.Velocity.Y = 0;
+                    }
+
+                    if (gameData.Velocity.Y > -0.2f && gameData.Velocity.Y < 0)
+                    {
+                        gameData.Velocity.Y = 0;
+                    }
+
+                    if (gameData.Velocity.X < 0.2f && gameData.Velocity.X > 0)
+                    {
+                        gameData.Velocity.X = 0;
+                    }
+
+                    if (gameData.Velocity.X > -0.2f && gameData.Velocity.X < 0)
+                    {
+                        gameData.Velocity.X = 0;
+                    }
+                }
+                #endregion
 
                 float newScale = gameData.CurrentScale;
                 float transparency = gameData.StartingTransparency;
@@ -129,13 +176,13 @@ namespace TestProgram1
             }
         }
 
-        public void AddParticle(Texture2D texture, Vector2 pos, Vector2 angleRange, Vector2 speedRange, Vector2 scaleRange, 
-            Color startColor, Color endColor, float gravity, bool shrink, bool fade, Vector2 startingRotation, 
-            Vector2 rotationIncrement, float startingTransparency, Vector2 timeRange, bool grow, bool rotateVelocity, 
-            Vector2 friction, int orientation, float fadeDelay,
+        public void AddParticle(Texture2D texture, Vector2 pos, Vector2 angleRange, Vector2 speedRange, Vector2 scaleRange,
+            Color startColor, Color endColor, float gravity, bool shrink, bool fade, Vector2 startingRotation,
+            Vector2 rotationIncrement, float startingTransparency, Vector2 timeRange, bool grow, bool rotateVelocity,
+            Vector2 friction, int orientation, float fadeDelay, Vector2 yRange, bool canBounce, bool stopBounce, bool hardBounce,
             out ParticleData gameData, out RenderData renderData)
         {
-            float myAngle, mySpeed, myScale, myRotation, myIncrement, myTime;
+            float myAngle, mySpeed, myScale, myRotation, myIncrement, myTime, myBounceY;
             Vector2 Direction, myVelocity;
 
             mySpeed = (float)DoubleRange(speedRange.X, speedRange.Y);
@@ -144,6 +191,7 @@ namespace TestProgram1
             myRotation = (float)DoubleRange(startingRotation.X, startingRotation.Y);
             myIncrement = (float)DoubleRange(rotationIncrement.X, rotationIncrement.Y);
             myTime = (float)DoubleRange(timeRange.X, timeRange.Y);
+            myBounceY = (float)DoubleRange(yRange.X, yRange.Y);
 
             Direction.X = (float)Math.Cos(myAngle);
             Direction.Y = (float)Math.Sin(myAngle);
@@ -172,7 +220,13 @@ namespace TestProgram1
                 RotationIncrement = myIncrement,
                 RotateVelocity = rotateVelocity,
                 FadeDelay = fadeDelay,
-                CurrentFadeDelay = 0
+                CurrentFadeDelay = 0,
+
+                BounceY = myBounceY,
+                CanBounce = canBounce,
+                HardBounce = hardBounce,
+                StopBounce = stopBounce,
+                HasBounced = false
             };
 
             if (grow == true)
