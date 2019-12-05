@@ -94,16 +94,16 @@ namespace TestProgram1
                     new Vector2(1000, 1000), 0.99f, true, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(0.25f, 0.5f),
                     new Color(Color.Orange.R, Color.Orange.G, Color.Orange.B, 100),
                     new Color(Color.OrangeRed.R, Color.OrangeRed.G, Color.OrangeRed.B, 20),
-                    0.0f, -2f, 16, 1, false, new Vector2(1080, 1080), false,
+                    0.03f, -2f, 60, 1, false, new Vector2(1080, 1080), false,
                     null, true, true, new Vector2(0, 0), new Vector2(0, 0), 0, true, new Vector2(0, 0), true, true, 2000, null, null, false);
 
             EmitterList.Add(newEmitter4);
 
             Emitter newEmitter5 = new Emitter(ParticleTexture, new Vector2(800, 200), new Vector2(-40, 40), new Vector2(6, 10),
                     new Vector2(1000, 1000), 0.99f, true, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(0.25f, 0.5f),
-                    new Color(Color.Orange.R, Color.Orange.G, Color.Orange.B, 100),
-                    new Color(Color.OrangeRed.R, Color.OrangeRed.G, Color.OrangeRed.B, 20),
-                    0.0f, -2f, 16, 1, false, new Vector2(1080, 1080), false,
+                    new Color(Color.Orange.R, Color.Orange.G, Color.Orange.B, 35),
+                    new Color(Color.OrangeRed.R, Color.OrangeRed.G, Color.OrangeRed.B, 5),
+                    -0.008f, -2f, 150, 2, false, new Vector2(1080, 1080), true,
                     null, true, true, new Vector2(0, 0), new Vector2(0, 0), 0, true, new Vector2(0, 0), true, true, 1500, null, null, false);
 
             EmitterList.Add(newEmitter5);
@@ -137,10 +137,12 @@ namespace TestProgram1
             //    }
             //}
 
-            EmitterList[0].Position = new Vector2(0, 1080/2) + new Vector2(-200, (1080 / 2) * (float)Math.Sin((float)gameTime.TotalGameTime.TotalSeconds));
+            //EmitterList[0].Position = new Vector2(0, 1080/2) + new Vector2(-200, (1080 / 2) * (float)Math.Sin((float)gameTime.TotalGameTime.TotalSeconds));
 
-            EmitterList[1].Position = new Vector2(0, 600) + new Vector2(-200, 600 * (float)Math.Cos((float)gameTime.TotalGameTime.TotalSeconds));
+            //EmitterList[1].Position = new Vector2(0, 600) + new Vector2(-200, 600 * (float)Math.Cos((float)gameTime.TotalGameTime.TotalSeconds));
 
+            EmitterList[0].Position = new Vector2(Random.Next(-200, -50), Random.Next(1080/2, 1080));
+            EmitterList[1].Position = new Vector2(Random.Next(-200, -50), Random.Next(1080/2, 1080));
 
             foreach (Emitter emitter in EmitterList)
             {
@@ -159,7 +161,8 @@ namespace TestProgram1
 
             spriteBatch.Begin();
 
-            RenderManager.DoFrame(spriteBatch);
+            //if (1 == 0)
+                RenderManager.DoFrame(spriteBatch);
 
             spriteBatch.DrawString(Font, "ChangeMessageCount: " + DoubleBuffer.ChangeMessageCount.ToString(), new Vector2(0, 0), Color.White);
             spriteBatch.DrawString(Font, "RenderDataObjects: " + RenderManager.RenderDataObjects.Count.ToString(), new Vector2(0, 24), Color.White);
@@ -183,6 +186,9 @@ namespace TestProgram1
         {
             if (UpdateManager.RunningThread != null)
                 UpdateManager.RunningThread.Abort();
+
+            DoubleBuffer.CleanUp();
+            
         }
 
         public Color RandomColor()
