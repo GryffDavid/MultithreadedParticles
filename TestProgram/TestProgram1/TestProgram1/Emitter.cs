@@ -9,13 +9,6 @@ namespace TestProgram1
 {
     class Emitter
     {
-        //float CurrentTime, MaxTime;
-        //Texture2D Texture;
-        //Vector2 Position, AngleRange, SpeedRange, TimeRange, StartingRotationRange, RotationIncrement, ScaleRange, YRange, EmitterSpeed, EmitterAngle, Friction;
-        //float StartingTransparency, Gravity, ActiveSeconds, Interval, EmitterGravity, FadeDelay, DrawDepth;
-        //int Burst;
-        //bool Fade, CanBounce, Shrink, StopBounce, HardBounce, RotateVelocity, FlipHor, FlipVer, ReduceDensity, SortParticles, Grow;
-        //Color StartColor, EndColor, ThirdColor;
         static Random Random = new Random();
 
         Texture2D Texture;
@@ -179,7 +172,9 @@ namespace TestProgram1
                 for (int i = 0; i < Burst; i++)
                 {
                     UpdateManager.AddParticle(
-                            Texture, Position, AngleRange, SpeedRange, ScaleRange, StartColor, EndColor, Gravity, Shrink, Fade, StartingRotationRange, RotationIncrementRange, Transparency, TimeRange, out gameData, out renderData);
+                            Texture, Position, AngleRange, SpeedRange, ScaleRange, StartColor, EndColor, 
+                            Gravity, Shrink, Fade, StartingRotationRange, RotationIncrementRange, 
+                            Transparency, TimeRange, out gameData, out renderData);
 
                     RenderManager.RenderDataObjects.Add(renderData);
                     UpdateManager.ParticleDataObjects.Add(gameData);

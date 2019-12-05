@@ -12,26 +12,17 @@ namespace TestProgram1
     class UpdateManager
     {
         protected ChangeBuffer MessageBuffer;
-        protected Game Game;
-
-        private GameTime GameTime;      
- 
+        private GameTime GameTime; 
         public List<ParticleData> ParticleDataObjects { get; set; }
-        public Stopwatch FrameWatch { get; set; }
         public DoubleBuffer DoubleBuffer;
         public Thread RunningThread;
-        Rectangle ScreenRect = new Rectangle(0, 0, 1920, 1080);
 
         static Random Random = new Random();
 
-        public UpdateManager(DoubleBuffer doubleBuffer, Game game)
+        public UpdateManager(DoubleBuffer doubleBuffer)
         {
             DoubleBuffer = doubleBuffer;
-            Game = game;
             ParticleDataObjects = new List<ParticleData>();
-
-            FrameWatch = new Stopwatch();
-            FrameWatch.Reset();
         }
 
         public void Update(GameTime gameTime)
@@ -41,14 +32,14 @@ namespace TestProgram1
             for (int i = 0; i < ParticleDataObjects.Count; i++)
             {
                 ParticleData gameData = ParticleDataObjects[i];
+
                 gameData.CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 gameData.Velocity.Y += gameData.Gravity;
+
                 Vector2 newPos = gameData.Position + gameData.Velocity;
                 float Rot = gameData.Rotation + MathHelper.ToRadians(gameData.RotationIncrement);
                 float newScale = gameData.Scale;
                 float transparency = gameData.StartingTransparency;
-
-
 
                 float percTime = gameData.CurrentTime / gameData.MaxTime;
                 Color newCol = Color.Lerp(gameData.StartColor, gameData.EndColor, percTime);
@@ -58,13 +49,11 @@ namespace TestProgram1
 
                 if (gameData.Fade == true)
                     transparency = MathHelper.Lerp(gameData.StartingTransparency, 0, percTime);
-
-
+                
                 ChangeMessage msg = new ChangeMessage()
                 {
                     ID = i
                 };
-
 
                 if (gameData.CurrentTime > gameData.MaxTime)
                 {

@@ -30,9 +30,7 @@ namespace TestProgram1
         UpdateManager UpdateManager;
         
         static Random Random = new Random();
-
-        SpriteFont Font;
-
+        
         List<Emitter> EmitterList = new List<Emitter>();
         
 
@@ -42,7 +40,6 @@ namespace TestProgram1
             Content.RootDirectory = "Content";
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
-            //graphics.IsFullScreen = true;
         }
         
         protected override void Initialize()
@@ -56,37 +53,36 @@ namespace TestProgram1
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             ParticleTexture = Content.Load<Texture2D>("diamond");
-            Font = Content.Load<SpriteFont>("Font");
 
             DoubleBuffer = new DoubleBuffer();
-            RenderManager = new RenderManager(DoubleBuffer, this);
-            RenderManager.LoadContent(Content);
-
-            UpdateManager = new UpdateManager(DoubleBuffer, this);    
+            RenderManager = new RenderManager(DoubleBuffer);
+            UpdateManager = new UpdateManager(DoubleBuffer);    
             
             UpdateManager.StartOnNewThread();
 
             Emitter.UpdateManager = UpdateManager;
             Emitter.RenderManager = RenderManager;
-
-            //Color newCol = new Color(Random.Next(0, 255), Random.Next(0, 255), Random.Next(0, 255));
-
+            
             Emitter newEmitter = new Emitter(ParticleTexture, new Vector2(1280/2, 720/2), new Vector2(0, 0), new Vector2(3, 3), 
                 new Vector2(6000, 6000), 1f, false, new Vector2(0, 0), new Vector2(0, 0), new Vector2(1, 1),
                 Color.Green, Color.Fuchsia, 0f, -1f, 350, 1, false, new Vector2(1080, 1080), false);
 
             Emitter newEmitter2 = new Emitter(ParticleTexture, new Vector2(1050, 500), new Vector2(90, 180), new Vector2(3, 5), 
             new Vector2(500, 1500), 0.5f, false, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(1, 3),
-                Color.Red, Color.Orange, 0.2f, -1f, 30, 5, false, new Vector2(1080, 1080), true);
+                Color.Red, Color.Orange, 0.2f, -1f, 15, 200, false, new Vector2(1080, 1080), true);
 
-            Emitter newEmitter3 = new Emitter(ParticleTexture, new Vector2(800, 80), new Vector2(0, 180), new Vector2(3, 5),
-            new Vector2(500, 1500), 0.5f, false, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(1, 3),
-                Color.Green, Color.Gold, 0.2f, -1f, 30, 5, false, new Vector2(1080, 1080), true);
+            //Emitter newEmitter3 = new Emitter(ParticleTexture, new Vector2(800, 80), new Vector2(0, 180), new Vector2(3, 5),
+            //new Vector2(500, 1500), 0.5f, false, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(1, 3),
+            //    Color.Green, Color.Gold, 0.2f, -1f, 30, 200, false, new Vector2(1080, 1080), true);
+
+            //Emitter newEmitter4 = new Emitter(ParticleTexture, new Vector2(800, 900), new Vector2(0, 180), new Vector2(3, 5),
+            //new Vector2(500, 1500), 0.5f, false, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(1, 3),
+            //    Color.Blue, Color.LightSkyBlue, 0.2f, -1f, 30, 200, false, new Vector2(1080, 1080), true);
 
             EmitterList.Add(newEmitter);
             EmitterList.Add(newEmitter2);
-            EmitterList.Add(newEmitter3);
-
+            //EmitterList.Add(newEmitter3);
+            //EmitterList.Add(newEmitter4);
         }
 
         protected override void UnloadContent()
@@ -97,6 +93,8 @@ namespace TestProgram1
         
         protected override void Update(GameTime gameTime)
         {
+            //EmitterList[1].Position = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+
             foreach (Emitter emitter in EmitterList)
             {
                 emitter.Update(gameTime);
@@ -113,11 +111,7 @@ namespace TestProgram1
             spriteBatch.Begin();
 
             RenderManager.DoFrame(spriteBatch);
-
-            spriteBatch.DrawString(Font, "ChangeMessageCount: " + DoubleBuffer.ChangeMessageCount.ToString(), new Vector2(0, 0), Color.White);
-            spriteBatch.DrawString(Font, "RenderDataObjects: " + RenderManager.RenderDataObjects.Count.ToString(), new Vector2(0, 24), Color.White);
-            spriteBatch.DrawString(Font, "ParticleDataObjects: " + UpdateManager.ParticleDataObjects.Count.ToString(), new Vector2(0, 48), Color.White);
-
+            
             spriteBatch.End();
             base.Draw(gameTime);
         }

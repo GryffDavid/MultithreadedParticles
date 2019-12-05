@@ -17,47 +17,10 @@ namespace TestProgram1
         private GameTime GameTime;
 
         protected ChangeBuffer MessageBuffer;
-        protected Game Game;
-
-        public SpriteFont Font;
-
-        //Texture2D ParticleTexture;
-        //Texture2D texture,
-        //Vector2 position, 
-        //float angle,
-        //float speed,
-        //float maxTime,
-        //float startingTransparency,
-        //bool fade,
-        //float startingRotation,
-        //float rotationChange,
-        //float scale,
-        //Color startColor, 
-        //Color endColor,
-        //float gravity,
-        //bool canBounce,
-        //float maxY,
-        //bool shrink,
-        //float drawDepth
-        //bool stopBounce
-        //bool hardBounce
-        //bool shadow
-        //bool rotateVelocity
-        //Vector2 friction
-        //SpriteEffects orientation = SpriteEffects.None,
-        //float fadeDelay
-        //bool sortDepth
-        //bool grow
-
-        public void LoadContent(ContentManager content)
-        {
-            Font = content.Load<SpriteFont>("Font");
-        }
-
-        public RenderManager(DoubleBuffer doubleBuffer, Game game)
+                
+        public RenderManager(DoubleBuffer doubleBuffer)
         {
             DoubleBuffer = doubleBuffer;
-            Game = game;
             RenderDataObjects = new List<RenderData>();
         }
         
@@ -87,18 +50,16 @@ namespace TestProgram1
                             RenderDataObjects.RemoveAt(msg.ID);
                         }
                         break;
-                        #endregion
+                    #endregion
                 }
             }
 
             #region Draw particles
             foreach (RenderData renderData in RenderDataObjects)
             {
-                //spriteBatch.DrawString(Font, RenderDataObjects.IndexOf(renderData).ToString(), renderData.Position, Color.White);
-
                 spriteBatch.Draw(renderData.Texture, new
                     Rectangle((int)renderData.Position.X, (int)renderData.Position.Y,
-                                   (int)(renderData.Texture.Width * renderData.Scale), (int)(renderData.Texture.Height * renderData.Scale)),
+                              (int)(renderData.Texture.Width * renderData.Scale), (int)(renderData.Texture.Height * renderData.Scale)),
                     null, renderData.Color * renderData.Transparency, renderData.Rotation,
                     new Vector2(renderData.Texture.Width / 2, renderData.Texture.Height / 2), SpriteEffects.None, 0);
             }
