@@ -179,6 +179,53 @@ namespace TestProgram1
             }
 
 
+            if (EmitterSpeed != 0)
+            {
+                EmitterVelocity.Y += EmitterGravity * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f);
+                Position += EmitterVelocity * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f);
+
+                if (CanBounce == true)
+                    if (Position.Y >= BounceY && BouncedOnGround == false)
+                    {
+                        if (HardBounce == true)
+                            Position.Y -= EmitterVelocity.Y * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f);
+
+                        EmitterVelocity.Y = (-EmitterVelocity.Y / 3) * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f);
+                        EmitterVelocity.X = (EmitterVelocity.X / 3) * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f);
+                        BouncedOnGround = true;
+                    }
+
+                if (StopBounce == true &&
+                    BouncedOnGround == true &&
+                    Position.Y > BounceY)
+                {
+                    EmitterVelocity.Y = (-EmitterVelocity.Y / 2) * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f);
+
+                    EmitterVelocity.X *= 0.9f * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f);
+
+                    if (EmitterVelocity.Y < 0.2f && EmitterVelocity.Y > 0)
+                    {
+                        EmitterVelocity.Y = 0;
+                    }
+
+                    if (EmitterVelocity.Y > -0.2f && EmitterVelocity.Y < 0)
+                    {
+                        EmitterVelocity.Y = 0;
+                    }
+
+                    if (EmitterVelocity.X < 0.2f && EmitterVelocity.X > 0)
+                    {
+                        EmitterVelocity.X = 0;
+                    }
+
+                    if (EmitterVelocity.X > -0.2f && EmitterVelocity.X < 0)
+                    {
+                        EmitterVelocity.X = 0;
+                    }
+                }
+            }
+
+
             if (FlipHor == true && FlipVer == false)
             {
                 Orientation = RandomOrientation(SpriteEffects.None, SpriteEffects.FlipHorizontally);
@@ -217,6 +264,8 @@ namespace TestProgram1
 
                 IntervalTime = 0;
             }
+
+
         }
 
         private int RandomOrientation(params SpriteEffects[] Orientations)

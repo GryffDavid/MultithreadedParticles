@@ -89,7 +89,7 @@ namespace TestProgram1
 
                     if (gameData.Velocity.Y < 0.2f && gameData.Velocity.Y > 0)
                     {
-                        gameData.Velocity.Y = 0;
+                        gameData.Velocity.Y = 0; 
                     }
 
                     if (gameData.Velocity.Y > -0.2f && gameData.Velocity.Y < 0)
@@ -110,7 +110,7 @@ namespace TestProgram1
                 #endregion
 
                 #region Update position
-               
+
                 Vector2 newPos = gameData.Position + gameData.Velocity;
                 #endregion
 
