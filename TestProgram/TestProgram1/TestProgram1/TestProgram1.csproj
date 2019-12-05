@@ -75,14 +75,12 @@
     <Compile Include="Buffers\ChangeBuffer.cs" />
     <Compile Include="Buffers\ChangeMessage.cs" />
     <Compile Include="Buffers\DoubleBuffer.cs" />
-    <Compile Include="Data\ParticleUpdateData.cs" />
-    <Compile Include="Drawable.cs" />
-    <Compile Include="Emitter.cs" />
+    <Compile Include="Data\GameData.cs" />
     <Compile Include="Particle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="aOtherStuff\Program.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="Data\ParticleRenderData.cs" />
+    <Compile Include="Data\RenderData.cs" />
     <Compile Include="Managers\RenderManager.cs" />
     <Compile Include="Managers\UpdateManager.cs" />
   </ItemGroup>

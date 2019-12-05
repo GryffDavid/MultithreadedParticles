@@ -16,9 +16,6 @@ namespace TestProgram1
         [FieldOffset(4)]
         public Vector2 Position;
 
-        [FieldOffset(8)]
-        public Color Color;
-
         [FieldOffset(20)]
         public int ID;
     }

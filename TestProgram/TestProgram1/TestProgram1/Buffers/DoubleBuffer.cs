@@ -37,16 +37,14 @@ namespace TestProgram1
             //reset the values
             Reset();
         }
-
+        
         public void StartUpdateProcessing(out ChangeBuffer updateBuffer, out GameTime gameTime)
         {
             //wait for start signal
             updateFrameStart.WaitOne();
             Thread.MemoryBarrier();
-
             //get the update buffer
             updateBuffer = buffers[currentUpdateBuffer];
-
             //get the game time
             gameTime = this.gameTime;
         }
@@ -55,10 +53,8 @@ namespace TestProgram1
             //wait for start signal
             renderFrameStart.WaitOne();
             Thread.MemoryBarrier();
-
             //get the render buffer
             renderBuffer = buffers[currentRenderBuffer];
-
             //ret the game time
             gameTime = this.gameTime;
         }
@@ -68,6 +64,19 @@ namespace TestProgram1
             currentRenderBuffer = currentUpdateBuffer;
             currentUpdateBuffer = (currentUpdateBuffer + 1) % 2;
             ChangeMessageCount = buffers[currentRenderBuffer].Messages.Count;
+        }
+
+        public void SubmitUpdate()
+        {
+            Thread.MemoryBarrier();
+            //update is done
+            updateFrameEnd.Set();
+        }
+        public void SubmitRender()
+        {
+            Thread.MemoryBarrier();
+            //render is done
+            renderFrameEnd.Set();
         }
 
         public void GlobalStartFrame(GameTime gameTime)
@@ -83,19 +92,6 @@ namespace TestProgram1
         {
             renderFrameEnd.WaitOne();
             updateFrameEnd.WaitOne();
-        }
-
-        public void SubmitUpdate()
-        {
-            Thread.MemoryBarrier();
-            //update is done
-            updateFrameEnd.Set();
-        }
-        public void SubmitRender()
-        {
-            Thread.MemoryBarrier();
-            //render is done
-            renderFrameEnd.Set();
         }
 
         public void Reset()

@@ -12,12 +12,16 @@ namespace TestProgram1
 {
     class RenderManager
     {
-        public List<ParticleRenderData> RenderDataObjects { get; set; }
+        public List<RenderData> RenderDataObjects { get; set; }
         private DoubleBuffer DoubleBuffer;
         private GameTime GameTime;
 
         protected ChangeBuffer MessageBuffer;
         protected Game Game;
+
+        public Stopwatch FrameWatch { get; set; }
+
+       
 
         SpriteBatch spriteBatch;
         Texture2D ParticleTexture;
@@ -26,7 +30,10 @@ namespace TestProgram1
         {
             DoubleBuffer = doubleBuffer;
             Game = game;
-            RenderDataObjects = new List<ParticleRenderData>();
+            RenderDataObjects = new List<RenderData>();
+
+            FrameWatch = new Stopwatch();
+            FrameWatch.Reset();
         }
 
         public virtual void LoadContent()
@@ -34,7 +41,14 @@ namespace TestProgram1
             ParticleTexture = Game.Content.Load<Texture2D>("diamond");
             spriteBatch = new SpriteBatch(Game.GraphicsDevice);
         }
-        
+
+        public void DoFrame()
+        {
+            DoubleBuffer.StartRenderProcessing(out MessageBuffer, out GameTime);
+            Draw(GameTime);
+            DoubleBuffer.SubmitRender();
+        }
+
         public void Draw(GameTime gameTime)
         {
             foreach (ChangeMessage msg in MessageBuffer.Messages)
@@ -51,7 +65,7 @@ namespace TestProgram1
                         {
                             if (RenderDataObjects.Count == msg.ID)
                             {
-                                ParticleRenderData newRenderData = new ParticleRenderData();
+                                RenderData newRenderData = new RenderData();
                                 newRenderData.Position = msg.Position;
                                 RenderDataObjects.Add(newRenderData);
                             }
@@ -63,27 +77,16 @@ namespace TestProgram1
                         break;
 
                     case ChangeMessageType.DeleteRenderData:
-                        {
-                            RenderDataObjects.RemoveAt(msg.ID);
-                        }
                         break;
                 }
             }
 
             spriteBatch.Begin();
-            foreach (ParticleRenderData renderData in RenderDataObjects)
+            foreach (RenderData renderData in RenderDataObjects)
             {
                 spriteBatch.Draw(ParticleTexture, renderData.Position, renderData.Color);
             }
             spriteBatch.End();
-        }
-
-
-        public void DoFrame()
-        {
-            DoubleBuffer.StartRenderProcessing(out MessageBuffer, out GameTime);
-            Draw(GameTime);
-            DoubleBuffer.SubmitRender();
         }
     }
 }
