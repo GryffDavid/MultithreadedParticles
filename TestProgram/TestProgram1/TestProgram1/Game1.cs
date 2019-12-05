@@ -85,7 +85,8 @@ namespace TestProgram1
             {
                 for (int i = 0; i < 5; i++)
                 {
-                    UpdateManager.AddParticle(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), new Vector2(0, 360), new Vector2(2, 3),
+                    UpdateManager.AddParticle(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), 
+                        new Vector2(0, 360), new Vector2(2, 3),
                         new Vector2(2, 2), Color.OrangeRed, Color.Yellow, 0.02f,
                         true, false, new Vector2(0, 360), new Vector2(-5, 5), 1f, new Vector2(2500, 4000),
                         out gameData, out renderData);

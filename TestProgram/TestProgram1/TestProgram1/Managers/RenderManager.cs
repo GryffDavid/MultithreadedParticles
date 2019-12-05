@@ -20,6 +20,7 @@ namespace TestProgram1
         protected Game Game;
 
         SpriteBatch spriteBatch;
+
         Texture2D ParticleTexture;
 
 
