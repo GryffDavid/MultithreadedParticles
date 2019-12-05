@@ -67,13 +67,24 @@ namespace TestProgram1
             Emitter.RenderManager = RenderManager;
 
 
-            Emitter newEmitter = new Emitter(ParticleTexture, new Vector2(500, 500));
-            Emitter newEmitter2 = new Emitter(ParticleTexture, new Vector2(1050, 500));
+            Emitter newEmitter = new Emitter(ParticleTexture, new Vector2(500, 500), new Vector2(0, 90), new Vector2(3, 5), 
+                new Vector2(500, 1500), 0.5f, true, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(1, 3),
+                Color.Purple, Color.Fuchsia, 0.2f, -1f, 30, 5, false, new Vector2(1080, 1080), true);
+
+            Emitter newEmitter2 = new Emitter(ParticleTexture, new Vector2(1050, 500), new Vector2(90, 180), new Vector2(3, 5), 
+            new Vector2(500, 1500), 0.5f, false, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(1, 3),
+                Color.Red, Color.Orange, 0.2f, -1f, 30, 5, false, new Vector2(1080, 1080), true);
+
+            Emitter newEmitter3 = new Emitter(ParticleTexture, new Vector2(800, 80), new Vector2(0, 180), new Vector2(3, 5),
+            new Vector2(500, 1500), 0.5f, false, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(1, 3),
+                Color.Green, Color.Gold, 0.2f, -1f, 30, 5, false, new Vector2(1080, 1080), true);
 
             EmitterList.Add(newEmitter);
             EmitterList.Add(newEmitter2);
+            EmitterList.Add(newEmitter3);
+
         }
-        
+
         protected override void UnloadContent()
         {
 
@@ -129,20 +140,6 @@ namespace TestProgram1
         public static float RandomFloat(float a, float b)
         {
             return a + (float)Random.NextDouble() * (b - a);
-        }
-
-        //public Texture2D RandomTexture()
-        //{
-        //    float num = (float)Random.NextDouble();
-
-        //    if (num > 0.5f)
-        //    {
-        //        return ParticleTexture;
-        //    }
-        //    else
-        //    {
-        //        return ParticleTexture2;
-        //    }
-        //}
+        }        
     }
 }
