@@ -19,8 +19,6 @@ namespace TestProgram1
         protected ChangeBuffer MessageBuffer;
         protected Game Game;
 
-        public Stopwatch FrameWatch { get; set; }
-
         SpriteBatch spriteBatch;
         Texture2D ParticleTexture;
 
@@ -29,9 +27,6 @@ namespace TestProgram1
             DoubleBuffer = doubleBuffer;
             Game = game;
             RenderDataObjects = new List<RenderData>();
-
-            FrameWatch = new Stopwatch();
-            FrameWatch.Reset();
         }
 
         public virtual void LoadContent()
@@ -39,30 +34,21 @@ namespace TestProgram1
             ParticleTexture = Game.Content.Load<Texture2D>("diamond");
             spriteBatch = new SpriteBatch(Game.GraphicsDevice);
         }
-
-        public void DoFrame()
-        {
-            DoubleBuffer.StartRenderProcessing(out MessageBuffer, out GameTime);
-            Draw(GameTime);
-            DoubleBuffer.SubmitRender();
-        }
-
+        
         public void Draw(GameTime gameTime)
         {
+            
+
             foreach (ChangeMessage msg in MessageBuffer.Messages)
             {
                 switch (msg.MessageType)
                 {
-                    #region Update Particle Position
                     case ChangeMessageType.UpdateParticlePosition:
                         {
                             RenderDataObjects[msg.ID].Position = msg.Position;
                         }
                         break;
-                    
-                    #endregion
 
-                    #region Create New Render Data
                     case ChangeMessageType.CreateNewRenderData:
                         {
                             if (RenderDataObjects.Count == msg.ID)
@@ -73,15 +59,14 @@ namespace TestProgram1
                             }
                             else if (msg.ID < RenderDataObjects.Count)
                             {
-                                RenderDataObjects[msg.ID].Position = msg.Position;
+                                RenderDataObjects[msg.ID].Position = msg.Position;                                
                             }
                         }
-                        break; 
-                    #endregion
+                        break;
 
                     case ChangeMessageType.DeleteRenderData:
                         {
-                            //Don't update the changes - they'll be wiped on the next loop
+                            RenderDataObjects.RemoveAt(msg.ID);
                         }
                         break;
                 }
@@ -93,6 +78,14 @@ namespace TestProgram1
                 spriteBatch.Draw(ParticleTexture, renderData.Position, Color.White);
             }
             spriteBatch.End();
+        }
+
+
+        public void DoFrame()
+        {
+            DoubleBuffer.StartRenderProcessing(out MessageBuffer, out GameTime);
+            Draw(GameTime);
+            DoubleBuffer.SubmitRender();
         }
     }
 }

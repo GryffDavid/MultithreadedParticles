@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace TestProgram1
 {
-    class GameData
+    class ParticleData
     {
         //What is needed to perform updates
         public Vector2 Position, Velocity;

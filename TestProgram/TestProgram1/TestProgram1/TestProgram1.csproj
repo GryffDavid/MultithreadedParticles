@@ -75,7 +75,7 @@
     <Compile Include="Buffers\ChangeBuffer.cs" />
     <Compile Include="Buffers\ChangeMessage.cs" />
     <Compile Include="Buffers\DoubleBuffer.cs" />
-    <Compile Include="Data\GameData.cs" />
+    <Compile Include="Data\ParticleData.cs" />
     <Compile Include="Particle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="aOtherStuff\Program.cs" />
