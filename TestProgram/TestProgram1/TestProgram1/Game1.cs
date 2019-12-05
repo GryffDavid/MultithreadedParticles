@@ -33,11 +33,6 @@ namespace TestProgram1
 
         SpriteFont Font;
 
-        RenderData renderData;
-        ParticleData gameData;
-
-        float CurrentTime;
-
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -65,8 +60,8 @@ namespace TestProgram1
 
             UpdateManager = new UpdateManager(DoubleBuffer, this);            
             UpdateManager.StartOnNewThread();
-            UpdateManager.RunningThread.Name = "UPDATE_MANAGER";
-            Debug.WriteLine(UpdateManager.RunningThread.ManagedThreadId.ToString());          
+
+            Debug.WriteLine(UpdateManager.RunningThread.ManagedThreadId.ToString());
         }
         
         protected override void UnloadContent()
@@ -77,19 +72,6 @@ namespace TestProgram1
         
         protected override void Update(GameTime gameTime)
         {
-            CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            if (CurrentTime > 15)
-            {
-                for (int i = 0; i < 100; i++)
-                {
-                    UpdateManager.AddParticle(new Vector2(400, 400), new Vector2(RandomFloat(-4, 4), RandomFloat(-4, 4)), RandomColor(), out gameData, out renderData);
-                    RenderManager.RenderDataObjects.Add(renderData);
-                    UpdateManager.ParticleDataObjects.Add(gameData);
-                }
-
-                CurrentTime = 0;
-            }
 
             base.Update(gameTime);
         }
@@ -125,11 +107,6 @@ namespace TestProgram1
         public Color RandomColor()
         {
             return new Color(Random.Next(0, 255) / 255f, Random.Next(0, 255) / 255f, Random.Next(0, 255) / 255f);
-        }
-
-        public static float RandomFloat(float a, float b)
-        {
-            return a + (float)Random.NextDouble() * (b - a);
         }
     }
 }

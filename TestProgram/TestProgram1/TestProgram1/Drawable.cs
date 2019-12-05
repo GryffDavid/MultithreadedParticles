@@ -34,19 +34,6 @@ namespace TestProgram1
 
         }
 
-
-        /// <summary>
-        /// For invaders, traps etc. that needs to cast shadows from lights
-        /// </summary>
-        /// <param name="graphics">Graphics Device</param>
-        /// <param name="effect">Basic Effect for drawing the actual sprite</param>
-        /// <param name="shadowEffect">The shadow effect for blurring the shadow</param>
-        /// <param name="lightList">The list of lights from which to cast shadows</param>
-        //public virtual void Draw(GraphicsDevice graphics, BasicEffect effect, Effect shadowEffect, List<Light> lightList)
-        //{
-
-        //}
-
         /// <summary>
         /// For drawing Heavy Projectiles - don't need to cast shadows from lights.
         /// </summary>

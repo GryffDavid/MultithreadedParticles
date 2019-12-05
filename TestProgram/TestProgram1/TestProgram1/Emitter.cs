@@ -8,48 +8,22 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TestProgram1
 {
-    //Sent to the emitter to control temporary changes to the appearance. Changed back after currentTime exceeds maxTime
-    public class Affector
-    {
-        public Nullable<Vector2> AngleRange, SpeedRange, HPRange, Friction;
-        public float? Gravity, Interval, Burst, ActiveSeconds;
-        public float? CurrentTime, MaxTime; //How long this Affector is applied to the emitter
-        public Nullable<Color> StartColor, EndColor;
-        public bool AffectsParticles = true;// Whether this affector is applied to all existing particles
-        public float LerpValue = 1.0f;//The value used to lerp when resetting the emitter - 1.0f = instantly
-        //public Nullable<Texture2D> texture;
-    };
-
     public class Emitter : Drawable
     {
-        public Vector2 Position, PreviousPosition, AngleRange;
-        public List<Particle> ParticleList;
         public Texture2D Texture;
-        public Vector2 ScaleRange, TimeRange, RotationIncrementRange, SpeedRange, StartingRotationRange, EmitterDirection, EmitterVelocity, YRange, Friction;
+        public Vector2 Position, PreviousPosition, AngleRange;        
+        public Vector2 ScaleRange, TimeRange, RotationIncrementRange, SpeedRange, StartingRotationRange, 
+                       EmitterDirection, EmitterVelocity, YRange, Friction;
         public float Transparency, Gravity, ActiveSeconds, Interval, MaxY, EmitterSpeed,
                      EmitterAngle, EmitterGravity, FadeDelay, StartingInterval;
         public Color StartColor, EndColor;
         public bool Fade, CanBounce, AddMore, Shrink, StopBounce, HardBounce, BouncedOnGround,
-                    RotateVelocity, FlipHor, FlipVer, ReduceDensity, SortParticles;
-        public bool Grow;
-        public string TextureName;
+                    RotateVelocity, FlipHor, FlipVer, ReduceDensity, SortParticles, Grow;
         public int Burst;
         static Random Random = new Random();
         public double IntervalTime, CurrentTime;
         public SpriteEffects Orientation = SpriteEffects.None;
-        //public Invader Anchor;
         public object Tether;
-
-        //Matrix ViewMatrix;
-
-        //public class Affector
-        //{
-        //    public Vector2 angleRange, speedRange, hpRange, friction;
-        //    public float gravity, interval, burst, activeSeconds;
-        //    public float currentTime, maxTime; //How long this Affector is applied to the emitter
-        //    public Color startColor, endColor;
-        //    public Texture2D texture;
-        //};
 
         /// <summary>
         /// Create a particle emitter with the specified parameters
@@ -106,7 +80,6 @@ namespace TestProgram1
             StartColor = startColor;
             EndColor = endColor;
             Position = position;
-            ParticleList = new List<Particle>();
             AngleRange = angleRange;
             Gravity = gravity;
             ActiveSeconds = activeSeconds;
@@ -205,15 +178,7 @@ namespace TestProgram1
             MaxY = Random.Next((int)yrange.X, (int)yrange.Y);
             AddMore = true;
         }
-
-        public void LoadContent(ContentManager contentManager)
-        {
-            if (Active == true)
-            {
-                Texture = contentManager.Load<Texture2D>(TextureName);
-            }
-        }
-
+        
         public void Update(GameTime gameTime)
         {
             if (Active == true)
@@ -229,11 +194,6 @@ namespace TestProgram1
                         AddMore = false;
                     }
                 }
-
-                //if (Anchor != null)
-                //{
-                //    Position = Anchor.Center;
-                //}
 
                 if (ReduceDensity == true)
                 {
@@ -337,41 +297,17 @@ namespace TestProgram1
                                                             FadeDelay, SortParticles, Grow);
 
 
-                        ParticleList.Add(NewParticle);
+                        //TRIGGER EVENT HERE THAT ADDS PARTICLE DATA TO THE UPDATER/RENDERER INSTEAD OF ADDING TO THE PARTICLE LIST
+                        //ParticleList.Add(NewParticle);
                     }
 
                     IntervalTime = 0;
                 }
             }
-
-            for (int i = 0; i < ParticleList.Count; i++)
-            {
-                ParticleList[i].Update(gameTime);
-
-                if (ParticleList[i].Active == false)
-                    ParticleList.RemoveAt(i);
-            }
-
+            
             PreviousPosition = Position;
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            for (int i = 0; i < ParticleList.Count; i++)
-            {
-                ParticleList[i].Draw(spriteBatch);
-            }
-        }
-
-        public override void Draw(GraphicsDevice graphics, Effect effect)
-        {
-            effect.Parameters["Texture"].SetValue(Texture);
-
-            foreach (Particle particle in ParticleList)
-            {
-                particle.Draw(graphics, effect);
-            }
-        }
 
         public double DoubleRange(double one, double two)
         {

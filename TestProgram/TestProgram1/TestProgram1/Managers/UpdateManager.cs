@@ -17,11 +17,11 @@ namespace TestProgram1
         private GameTime GameTime;      
  
         public List<ParticleData> ParticleDataObjects { get; set; }
+        public List<Emitter> EmitterList = new List<Emitter>();
+        
         public Stopwatch FrameWatch { get; set; }
         public DoubleBuffer DoubleBuffer;
-        public Thread RunningThread;        
-        public MouseState CurrentMouseState, PreviousMouseState;
-        Rectangle ScreenRect = new Rectangle(0, 0, 1280, 720);
+        public Thread RunningThread;
 
         public UpdateManager(DoubleBuffer doubleBuffer, Game game)
         {
@@ -36,34 +36,7 @@ namespace TestProgram1
         public void Update(GameTime gameTime)
         {
             MessageBuffer.Clear();
-            CurrentMouseState = Mouse.GetState();
-
-            for (int i = 0; i < ParticleDataObjects.Count; i++)
-            {
-                ParticleData gameData = ParticleDataObjects[i];
-                Vector2 newPos = gameData.Position + gameData.Velocity;
-
-                ChangeMessage msg = new ChangeMessage();
-                msg.ID = i;
-
-                if (!ScreenRect.Contains(new Point((int)newPos.X, (int)newPos.Y)))
-                {
-                    msg.MessageType = ChangeMessageType.DeleteRenderData;
-                    ParticleDataObjects.Remove(gameData);
-                    MessageBuffer.Add(msg);
-                }
-                else
-                {
-                    msg.MessageType = ChangeMessageType.UpdateParticlePosition;
-                    msg.Position = newPos;
-                    MessageBuffer.Add(msg);
-                    gameData.Position = newPos;
-                }                
-            }
-
-            PreviousMouseState = CurrentMouseState;
         }
-
 
         private void Run()
         {
@@ -80,24 +53,11 @@ namespace TestProgram1
             RunningThread.Start();
         }
 
-
         public void DoFrame()
         {
             DoubleBuffer.StartUpdateProcessing(out MessageBuffer, out GameTime);
             Update(GameTime);
             DoubleBuffer.SubmitUpdate();
-        }
-          
-
-        public void AddParticle(Vector2 pos, Vector2 vel, Color color, out ParticleData gameData, out RenderData renderData)
-        {
-            gameData = new ParticleData();
-            gameData.Position = pos;
-            gameData.Velocity = vel;            
-
-            renderData = new RenderData();
-            renderData.Position = gameData.Position;
-            renderData.Color = color;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace TestProgram1
 {
     class RenderManager
     {
-        public List<RenderData> RenderDataObjects { get; set; }
+        public List<ParticleRenderData> RenderDataObjects { get; set; }
         private DoubleBuffer DoubleBuffer;
         private GameTime GameTime;
 
@@ -26,7 +26,7 @@ namespace TestProgram1
         {
             DoubleBuffer = doubleBuffer;
             Game = game;
-            RenderDataObjects = new List<RenderData>();
+            RenderDataObjects = new List<ParticleRenderData>();
         }
 
         public virtual void LoadContent()
@@ -37,8 +37,6 @@ namespace TestProgram1
         
         public void Draw(GameTime gameTime)
         {
-            
-
             foreach (ChangeMessage msg in MessageBuffer.Messages)
             {
                 switch (msg.MessageType)
@@ -53,7 +51,7 @@ namespace TestProgram1
                         {
                             if (RenderDataObjects.Count == msg.ID)
                             {
-                                RenderData newRenderData = new RenderData();
+                                ParticleRenderData newRenderData = new ParticleRenderData();
                                 newRenderData.Position = msg.Position;
                                 RenderDataObjects.Add(newRenderData);
                             }
@@ -73,12 +71,13 @@ namespace TestProgram1
             }
 
             spriteBatch.Begin();
-            foreach (RenderData renderData in RenderDataObjects)
+            foreach (ParticleRenderData renderData in RenderDataObjects)
             {
                 spriteBatch.Draw(ParticleTexture, renderData.Position, renderData.Color);
             }
             spriteBatch.End();
         }
+
 
         public void DoFrame()
         {

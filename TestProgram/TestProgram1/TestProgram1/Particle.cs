@@ -19,7 +19,7 @@ namespace TestProgram1
                      CurrentTime, MaxTime,
                      CurrentScale, MaxScale,
                      CurrentTransparency, MaxTransparency,
-                     CurrentFadeDelay, FadeDelay;
+                     CurrentFadeDelay, FadeDelay, RadRotation;
         float PercentageTime;
 
         public Color CurrentColor, EndColor, StartColor;
@@ -31,28 +31,9 @@ namespace TestProgram1
         public Color Color
         {
             get { return _Color; }
-            set
-            {
-                _Color = value;
-                ParticleVertices[0].Color = value;
-                ParticleVertices[1].Color = value;
-                ParticleVertices[2].Color = value;
-                ParticleVertices[3].Color = value;
-            }
+            set { _Color = value; }
         }
-
-        public float RadRotation;
-
-        //THIS IS SO THAT SPARKS CAN BOUNCE OFF OF INVADERS
-        //List<Invader> InvaderList;
-
-        //THIS IS SO THAT SPARKS CAN BOUNCE OFF OF SOLID TRAPS
-        //List<Trap> TrapList;
-
-        VertexPositionColorTexture[] ParticleVertices = new VertexPositionColorTexture[4];
-        int[] ParticleIndices = new int[6];
-        public Vector2[] texCoords = new Vector2[4];
-
+        
         public Particle(Texture2D texture, Vector2 position, float angle, float speed, float maxTime,
             float startingTransparency, bool fade, float startingRotation, float rotationChange,
             float scale, Color startColor, Color endColor, float gravity, bool canBounce, float maxY, bool shrink,
@@ -114,7 +95,6 @@ namespace TestProgram1
             Shadow = shadow.Value;
 
             Orientation = orientation.Value;
-            texCoords = GetTexCoords(Orientation);
 
             if (friction != null)
                 Friction = friction.Value;
@@ -128,41 +108,6 @@ namespace TestProgram1
             Origin = new Vector2(Texture.Width / 2, Texture.Height / 2);
 
             RadRotation = MathHelper.ToRadians(CurrentRotation);
-
-            ParticleVertices[0] = new VertexPositionColorTexture()
-            {
-                Color = Color,
-                Position = new Vector3(CurrentPosition.X - (Texture.Width * CurrentScale) / 2, CurrentPosition.Y - (Texture.Height * CurrentScale) / 2, 0),
-                TextureCoordinate = texCoords[0]
-            };
-
-            ParticleVertices[1] = new VertexPositionColorTexture()
-            {
-                Color = Color,
-                Position = new Vector3(CurrentPosition.X + (Texture.Width * CurrentScale) / 2, CurrentPosition.Y - (Texture.Height * CurrentScale) / 2, 0),
-                TextureCoordinate = texCoords[1]
-            };
-
-            ParticleVertices[2] = new VertexPositionColorTexture()
-            {
-                Color = Color,
-                Position = new Vector3(CurrentPosition.X + (Texture.Width * CurrentScale) / 2, CurrentPosition.Y + (Texture.Height * CurrentScale) / 2, 0),
-                TextureCoordinate = texCoords[2]
-            };
-
-            ParticleVertices[3] = new VertexPositionColorTexture()
-            {
-                Color = Color,
-                Position = new Vector3(CurrentPosition.X - (Texture.Width * CurrentScale) / 2, CurrentPosition.Y + (Texture.Height * CurrentScale) / 2, 0),
-                TextureCoordinate = texCoords[3]
-            };
-
-            ParticleIndices[0] = 0;
-            ParticleIndices[1] = 1;
-            ParticleIndices[2] = 2;
-            ParticleIndices[3] = 2;
-            ParticleIndices[4] = 3;
-            ParticleIndices[5] = 0;
         }
 
         public void Update(GameTime gameTime)
@@ -231,11 +176,6 @@ namespace TestProgram1
                 if (Velocity != Vector2.Zero)
                 {
                     CurrentPosition += Velocity * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f);
-
-                    ParticleVertices[0].Position = new Vector3(CurrentPosition.X - (Texture.Width * CurrentScale) / 2, CurrentPosition.Y - (Texture.Height * CurrentScale) / 2, 0);
-                    ParticleVertices[1].Position = new Vector3(CurrentPosition.X + (Texture.Width * CurrentScale) / 2, CurrentPosition.Y - (Texture.Height * CurrentScale) / 2, 0);
-                    ParticleVertices[2].Position = new Vector3(CurrentPosition.X + (Texture.Width * CurrentScale) / 2, CurrentPosition.Y + (Texture.Height * CurrentScale) / 2, 0);
-                    ParticleVertices[3].Position = new Vector3(CurrentPosition.X - (Texture.Width * CurrentScale) / 2, CurrentPosition.Y + (Texture.Height * CurrentScale) / 2, 0);
                 }
 
                 Velocity.Y += Gravity * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f);
@@ -364,63 +304,6 @@ namespace TestProgram1
             {
                 spriteBatch.Draw(Texture, DestinationRectangle, null, Color, RadRotation, Origin, Orientation, DrawDepth);
             }
-        }
-
-        public override void Draw(GraphicsDevice graphics, Effect effect)
-        {
-            //This should only be applied if the rotation changes.
-            //If the particle does not have a rotation increment, it should inherit its World Matrix from the emitter
-            //This should stop each particle having to change the world value for the effect
-
-            effect.Parameters["World"].SetValue(Matrix.CreateTranslation(new Vector3(-CurrentPosition.X, -CurrentPosition.Y, 0)) *
-                                                Matrix.CreateRotationZ(RadRotation) *
-                                                Matrix.CreateTranslation(new Vector3(CurrentPosition.X, CurrentPosition.Y, 0)));
-
-            effect.Parameters["Color"].SetValue(new Vector4(Color.R / 255f, Color.G / 255f, Color.B / 255f, Color.A / 255f));
-
-            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                graphics.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, ParticleVertices, 0, 4, ParticleIndices, 0, 2, VertexPositionColorTexture.VertexDeclaration);
-            }
-
-        }
-
-        public Vector2[] GetTexCoords(SpriteEffects orientation)
-        {
-            Vector2[] coords = new Vector2[4];
-
-            switch (orientation)
-            {
-                case SpriteEffects.FlipHorizontally:
-                    {
-                        coords[0] = new Vector2(1, 0);
-                        coords[1] = new Vector2(0, 0);
-                        coords[2] = new Vector2(0, 1);
-                        coords[3] = new Vector2(1, 1);
-                    }
-                    break;
-
-                case SpriteEffects.FlipVertically:
-                    {
-                        coords[0] = new Vector2(0, 1);
-                        coords[1] = new Vector2(1, 1);
-                        coords[2] = new Vector2(1, 0);
-                        coords[3] = new Vector2(0, 0);
-                    }
-                    break;
-
-                case SpriteEffects.None:
-                    {
-                        coords[0] = new Vector2(0, 0);
-                        coords[1] = new Vector2(1, 0);
-                        coords[2] = new Vector2(1, 1);
-                        coords[3] = new Vector2(0, 1);
-                    }
-                    break;
-            }
-
-            return coords;
         }
     }
 }
