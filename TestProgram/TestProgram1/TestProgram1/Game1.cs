@@ -79,13 +79,13 @@ namespace TestProgram1
                 Color.Green, Color.Gold, 0.2f, -1f, 30, 30, false, new Vector2(1080, 1080), true);
 
             Emitter newEmitter4 = new Emitter(ParticleTexture2, new Vector2(800, 200), new Vector2(0, 180), new Vector2(3, 5),
-            new Vector2(500, 1500), 0.99f, false, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(1, 3),
-                Color.White, Color.White, 0.2f, -1f, 250, 5, false, new Vector2(1080, 1080), true,
-                null, null, null, null, null, null, true, new Vector2(0, 0), true, true, null, null, null, true);
+            new Vector2(500, 1500), 0.99f, true, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(1, 3),
+                Color.White, Color.White, 0.05f, -1f, 250, 5, false, new Vector2(1080, 1080), false,
+                null, null, null, null, null, null, true, new Vector2(0, 0), true, true, 2000, null, null, false);
 
-            //EmitterList.Add(newEmitter);
-            //EmitterList.Add(newEmitter2);
-            //EmitterList.Add(newEmitter3);
+            EmitterList.Add(newEmitter);
+            EmitterList.Add(newEmitter2);
+            EmitterList.Add(newEmitter3);
             EmitterList.Add(newEmitter4);
         }
 

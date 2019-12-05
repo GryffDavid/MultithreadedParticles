@@ -34,7 +34,23 @@ namespace TestProgram1
                 ParticleData gameData = ParticleDataObjects[i];
                 float Rot;
 
-                gameData.CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (gameData.FadeDelay > 0)
+                {
+                    gameData.CurrentFadeDelay += (float)GameTime.ElapsedGameTime.TotalMilliseconds;
+
+                    if (gameData.CurrentFadeDelay >= gameData.FadeDelay)
+                    {
+                        if (gameData.CurrentTime < gameData.MaxTime)
+                            gameData.CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                    }
+                }
+                else
+                {
+                    if (gameData.CurrentTime < gameData.MaxTime)
+                        gameData.CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                }
+                
+                
                 gameData.Velocity.Y += gameData.Gravity;
 
                 if (gameData.Friction != new Vector2(0, 0))
@@ -48,42 +64,48 @@ namespace TestProgram1
 
                 if (gameData.RotateVelocity == true)
                 {
-                    Rot = (float)Math.Atan2(gameData.Velocity.Y, gameData.Velocity.X);                    
+                    Rot = (float)Math.Atan2(gameData.Velocity.Y, gameData.Velocity.X);
                 }
                 else
                 {
                     Rot = gameData.Rotation + MathHelper.ToRadians(gameData.RotationIncrement);
                 }
-            
-                               
 
                 float newScale = gameData.CurrentScale;
                 float transparency = gameData.StartingTransparency;
 
                 float percTime = gameData.CurrentTime / gameData.MaxTime;
                 Color newCol = Color.Lerp(gameData.StartColor, gameData.EndColor, percTime);
-
-                //if (gameData.Shrink == true)
-                //    newScale = MathHelper.Lerp(gameData.CurrentScale, 0, percTime);
-
+                
                 if (gameData.Shrink == true && gameData.Grow == false)
-                    newScale = MathHelper.Lerp(gameData.MaxScale, 0, percTime);
-
+                    newScale = gameData.MaxScale * (1.0f - ((1 / gameData.MaxTime) * (gameData.CurrentTime)));
+                
                 if (gameData.Grow == true && gameData.Shrink == false)
-                    newScale = gameData.MaxScale * ((1 / (gameData.MaxTime + 0)) * (gameData.CurrentTime + 0));
+                    newScale = gameData.MaxScale * ((1 / gameData.MaxTime) * (gameData.CurrentTime));
 
                 if (gameData.Shrink == true && gameData.Grow == true)
                     newScale = gameData.MaxScale * (float)Math.Sin(Math.PI * percTime);
 
+
                 if (gameData.Fade == true)
+                {
                     transparency = MathHelper.Lerp(gameData.StartingTransparency, 0, percTime);
-                
+                    //transparency = gameData.StartingTransparency * (1.0f - ((1 / (gameData.MaxTime + gameData.FadeDelay)) * (gameData.CurrentTime + gameData.CurrentFadeDelay)));
+                }
+
+                if (gameData.CurrentTime >= gameData.MaxTime)
+                {
+                    gameData.Active = false;
+                }
+
+                //transparency = MathHelper.Lerp(gameData.StartingTransparency, 0, percTime);
+
                 ChangeMessage msg = new ChangeMessage()
                 {
                     ID = i
                 };
 
-                if (gameData.CurrentTime > gameData.MaxTime)
+                if (gameData.Active == false)
                 {
                     msg.MessageType = ChangeMessageType.DeleteRenderData;
                     ParticleDataObjects.Remove(gameData);
@@ -130,6 +152,7 @@ namespace TestProgram1
 
             gameData = new ParticleData()
             {
+                Active = true,
                 Position = pos,
                 Angle = angleRange,
                 CurrentTime = 0,
@@ -148,7 +171,8 @@ namespace TestProgram1
                 Rotation = myRotation,
                 RotationIncrement = myIncrement,
                 RotateVelocity = rotateVelocity,
-                FadeDelay = fadeDelay
+                FadeDelay = fadeDelay,
+                CurrentFadeDelay = 0
             };
 
             if (grow == true)
