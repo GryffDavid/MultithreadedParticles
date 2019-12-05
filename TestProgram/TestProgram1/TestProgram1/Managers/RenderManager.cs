@@ -35,56 +35,69 @@ namespace TestProgram1
             spriteBatch = new SpriteBatch(Game.GraphicsDevice);
         }
         
+        public void DoFrame()
+        {
+            DoubleBuffer.StartRenderProcessing(out MessageBuffer, out GameTime);
+            Draw(GameTime);
+            DoubleBuffer.SubmitRender();
+        }
+
         public void Draw(GameTime gameTime)
         {
-            
-
             foreach (ChangeMessage msg in MessageBuffer.Messages)
             {
                 switch (msg.MessageType)
                 {
-                    case ChangeMessageType.UpdateParticlePosition:
+                    #region UpdateParticlePosition
+                    case ChangeMessageType.UpdateParticle:
                         {
                             RenderDataObjects[msg.ID].Position = msg.Position;
+                            RenderDataObjects[msg.ID].Rotation = msg.Rotation;
                         }
                         break;
+                    #endregion
 
+                    #region CreateNewRenderData
                     case ChangeMessageType.CreateNewRenderData:
                         {
                             if (RenderDataObjects.Count == msg.ID)
                             {
                                 RenderData newRenderData = new RenderData();
                                 newRenderData.Position = msg.Position;
+                                newRenderData.Rotation = msg.Rotation;
                                 RenderDataObjects.Add(newRenderData);
                             }
                             else if (msg.ID < RenderDataObjects.Count)
                             {
-                                RenderDataObjects[msg.ID].Position = msg.Position;                                
+                                RenderDataObjects[msg.ID].Position = msg.Position;
+                                RenderDataObjects[msg.ID].Rotation = msg.Rotation;
                             }
                         }
                         break;
+                    #endregion
 
+                    #region DeleteRenderData
                     case ChangeMessageType.DeleteRenderData:
                         {
                             RenderDataObjects.RemoveAt(msg.ID);
                         }
                         break;
+                        #endregion
                 }
             }
 
+            #region Draw particles
             spriteBatch.Begin();
             foreach (RenderData renderData in RenderDataObjects)
             {
-                spriteBatch.Draw(ParticleTexture, renderData.Position, renderData.Color);
+                spriteBatch.Draw(ParticleTexture, new 
+                    Rectangle((int)renderData.Position.X, (int)renderData.Position.Y, 
+                                   ParticleTexture.Width, ParticleTexture.Height), 
+                    null, renderData.Color, renderData.Rotation, 
+                    new Vector2(ParticleTexture.Width/2, ParticleTexture.Height/2), SpriteEffects.None, 0);
             }
             spriteBatch.End();
-        }
-
-        public void DoFrame()
-        {
-            DoubleBuffer.StartRenderProcessing(out MessageBuffer, out GameTime);
-            Draw(GameTime);
-            DoubleBuffer.SubmitRender();
+            #endregion
         }
     }
 }

@@ -10,5 +10,6 @@ namespace TestProgram1
     {
         //What is needed to perform updates
         public Vector2 Position, Velocity;
+        public float Rotation, CurrentTime, MaxTime;
     }
 }

@@ -23,6 +23,8 @@ namespace TestProgram1
         public MouseState CurrentMouseState, PreviousMouseState;
         Rectangle ScreenRect = new Rectangle(0, 0, 1280, 720);
 
+        static Random Random = new Random();
+
         public UpdateManager(DoubleBuffer doubleBuffer, Game game)
         {
             DoubleBuffer = doubleBuffer;
@@ -36,32 +38,41 @@ namespace TestProgram1
         public void Update(GameTime gameTime)
         {
             MessageBuffer.Clear();
-            CurrentMouseState = Mouse.GetState();
 
             for (int i = 0; i < ParticleDataObjects.Count; i++)
             {
                 ParticleData gameData = ParticleDataObjects[i];
+
                 Vector2 newPos = gameData.Position + gameData.Velocity;
+                float Rot = gameData.Rotation + 3f;
 
-                ChangeMessage msg = new ChangeMessage();
-                msg.ID = i;
+                gameData.CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-                if (!ScreenRect.Contains(new Point((int)newPos.X, (int)newPos.Y)))
+                ChangeMessage msg = new ChangeMessage()
+                {
+                    ID = i
+                };
+
+                #region Remove particle if it leaves the screen
+                if (!ScreenRect.Contains(new Point((int)newPos.X, (int)newPos.Y)) ||
+                    gameData.CurrentTime > gameData.MaxTime)
                 {
                     msg.MessageType = ChangeMessageType.DeleteRenderData;
                     ParticleDataObjects.Remove(gameData);
                     MessageBuffer.Add(msg);
                 }
+                #endregion
                 else
                 {
-                    msg.MessageType = ChangeMessageType.UpdateParticlePosition;
+                    msg.MessageType = ChangeMessageType.UpdateParticle;
                     msg.Position = newPos;
+                    msg.Rotation = Rot;
                     MessageBuffer.Add(msg);
                     gameData.Position = newPos;
-                }                
+                    gameData.Rotation = Rot;                    
+                    
+                }
             }
-
-            PreviousMouseState = CurrentMouseState;
         }
 
 
@@ -93,11 +104,15 @@ namespace TestProgram1
         {
             gameData = new ParticleData();
             gameData.Position = pos;
-            gameData.Velocity = vel;            
+            gameData.Velocity = vel;
+            gameData.CurrentTime = 0;
+            gameData.MaxTime = 1000f;
 
             renderData = new RenderData();
             renderData.Position = gameData.Position;
             renderData.Color = color;
+            renderData.Rotation = Random.Next(0, 360);
+            
         }
     }
 }

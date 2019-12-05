@@ -15,7 +15,7 @@ namespace TestProgram1
 {
     public enum ChangeMessageType
     {
-        UpdateParticlePosition,
+        UpdateParticle,
         CreateNewRenderData,
         DeleteRenderData,
     }
@@ -29,12 +29,13 @@ namespace TestProgram1
         DoubleBuffer DoubleBuffer;
         RenderManager RenderManager;
         UpdateManager UpdateManager;
-        static Random Random = new Random();
-
-        SpriteFont Font;
 
         RenderData renderData;
         ParticleData gameData;
+
+        static Random Random = new Random();
+
+        SpriteFont Font;
 
         float CurrentTime;
 

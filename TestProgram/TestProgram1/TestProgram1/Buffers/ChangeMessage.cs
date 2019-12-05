@@ -21,5 +21,8 @@ namespace TestProgram1
 
         [FieldOffset(20)]
         public int ID;
+
+        [FieldOffset(24)]
+        public float Rotation;        
     }
 }
