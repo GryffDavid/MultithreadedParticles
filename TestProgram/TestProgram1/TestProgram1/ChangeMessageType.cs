@@ -7,9 +7,7 @@ namespace TestProgram1
 {
     public enum ChangeMessageType
     {
-        UpdateCameraView,
-        UpdateWorldMatrix,
-        UpdateHighlightColor,
+        UpdateParticlePosition,
         CreateNewRenderData,
         DeleteRenderData,
     }

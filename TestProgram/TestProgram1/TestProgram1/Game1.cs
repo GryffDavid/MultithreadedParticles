@@ -18,6 +18,10 @@ namespace TestProgram1
         List<Emitter> EmitterList = new List<Emitter>();
         Texture2D ParticleTexture;
 
+        DoubleBuffer DoubleBuffer;
+        RenderManager RenderManager;
+        UpdateManager UpdateManager;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -36,7 +40,17 @@ namespace TestProgram1
             spriteBatch = new SpriteBatch(GraphicsDevice);
             ParticleTexture = Content.Load<Texture2D>("diamond");
 
-            EmitterList.Add(new Emitter(ParticleTexture, new Vector2(400, 400), new Vector2(0, 360)));
+            DoubleBuffer = new DoubleBuffer();
+            RenderManager = new RenderManager(DoubleBuffer, this);
+            RenderManager.LoadContent();
+
+            UpdateManager = new UpdateManager(DoubleBuffer, this);
+
+            UpdateManager.StartOnNewThread();
+
+
+
+            //EmitterList.Add(new Emitter(ParticleTexture, new Vector2(400, 400), new Vector2(0, 360)));
         }
         
         protected override void UnloadContent()
