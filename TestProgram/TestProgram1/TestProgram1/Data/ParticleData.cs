@@ -11,7 +11,7 @@ namespace TestProgram1
         //What is needed to perform updates
         public Vector2 Position, Angle, Velocity;
         public Color StartColor, EndColor;
-        public float Rotation, CurrentTime, MaxTime, Gravity, Scale, StartingTransparency;
+        public float Rotation, CurrentTime, MaxTime, Gravity, Scale, StartingTransparency, RotationIncrement;
         public bool Shrink, Fade;
     }
 }

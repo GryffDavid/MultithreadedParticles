@@ -65,6 +65,8 @@ namespace TestProgram1
 
             UpdateManager = new UpdateManager(DoubleBuffer, this);            
             UpdateManager.StartOnNewThread();
+            //UpdateManager.RunningThread.IsBackground = false;
+            //UpdateManager.RunningThread.Priority = ThreadPriority.AboveNormal;
             UpdateManager.RunningThread.Name = "UPDATE_MANAGER";
             Debug.WriteLine(UpdateManager.RunningThread.ManagedThreadId.ToString());          
         }
@@ -79,13 +81,14 @@ namespace TestProgram1
         {
             CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if (CurrentTime > 15)
+            if (CurrentTime > 1)
             {
-                for (int i = 0; i < 250; i++)
+                for (int i = 0; i < 5; i++)
                 {
-                    UpdateManager.AddParticle(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), new Vector2(0, 360), new Vector2(2, 3), 
-                        new Vector2(2, 2), Color.Yellow, Color.Purple, 0.2f,
-                        true, false, out gameData, out renderData);
+                    UpdateManager.AddParticle(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), new Vector2(0, 360), new Vector2(2, 3),
+                        new Vector2(2, 2), Color.OrangeRed, Color.Yellow, 0.02f,
+                        true, false, new Vector2(0, 360), new Vector2(-5, 5), 1f, new Vector2(2500, 4000),
+                        out gameData, out renderData);
 
                     RenderManager.RenderDataObjects.Add(renderData);
                     UpdateManager.ParticleDataObjects.Add(gameData);

@@ -44,7 +44,7 @@ namespace TestProgram1
                 gameData.CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 gameData.Velocity.Y += gameData.Gravity;
                 Vector2 newPos = gameData.Position + gameData.Velocity;
-                float Rot = gameData.Rotation + 3f;
+                float Rot = gameData.Rotation + MathHelper.ToRadians(gameData.RotationIncrement);
                 float newScale = gameData.Scale;
                 float transparency = gameData.StartingTransparency;
 
@@ -66,8 +66,7 @@ namespace TestProgram1
                 };
 
                 #region Remove particle if it leaves the screen
-                if (!ScreenRect.Contains(new Point((int)newPos.X, (int)newPos.Y)) ||
-                    gameData.CurrentTime > gameData.MaxTime)
+                if (gameData.CurrentTime > gameData.MaxTime)
                 {
                     msg.MessageType = ChangeMessageType.DeleteRenderData;
                     ParticleDataObjects.Remove(gameData);
@@ -92,17 +91,20 @@ namespace TestProgram1
         }
 
         public void AddParticle(Vector2 pos, Vector2 angleRange, Vector2 speedRange, Vector2 scaleRange, 
-            Color startColor, Color endColor, float gravity, bool shrink, bool fade,
+            Color startColor, Color endColor, float gravity, bool shrink, bool fade, Vector2 startingRotation, 
+            Vector2 rotationIncrement, float startingTransparency, Vector2 timeRange,
             out ParticleData gameData, out RenderData renderData)
         {
-            float myAngle, mySpeed, myScale;
+            float myAngle, mySpeed, myScale, myRotation, myIncrement, myTime;
             Vector2 Direction, myVelocity;
 
             mySpeed = (float)DoubleRange(speedRange.X, speedRange.Y);
             myAngle = -MathHelper.ToRadians((float)DoubleRange(angleRange.X, angleRange.Y));
             myScale = (float)DoubleRange(scaleRange.X, scaleRange.Y);
+            myRotation = (float)DoubleRange(startingRotation.X, startingRotation.Y);
+            myIncrement = (float)DoubleRange(rotationIncrement.X, rotationIncrement.Y);
+            myTime = (float)DoubleRange(timeRange.X, timeRange.Y);
 
-            
             Direction.X = (float)Math.Cos(myAngle);
             Direction.Y = (float)Math.Sin(myAngle);
 
@@ -113,7 +115,7 @@ namespace TestProgram1
                 Position = pos,
                 Angle = angleRange,
                 CurrentTime = 0,
-                MaxTime = Random.Next(500, 2000),
+                MaxTime = myTime,
                 Velocity = myVelocity,
                 StartColor = startColor,
                 EndColor = endColor,
@@ -121,7 +123,9 @@ namespace TestProgram1
                 Scale = myScale,
                 Shrink = shrink,
                 Fade = fade,
-                StartingTransparency = 1f
+                StartingTransparency = startingTransparency,
+                Rotation = myRotation,
+                RotationIncrement = myIncrement
             };
 
             renderData = new RenderData()
