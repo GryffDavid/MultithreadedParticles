@@ -28,6 +28,6 @@ namespace TestProgram1
         public float Scale;
 
         [FieldOffset(32)]
-        public float Transparency;
+        public float Transparency;        
     }
 }

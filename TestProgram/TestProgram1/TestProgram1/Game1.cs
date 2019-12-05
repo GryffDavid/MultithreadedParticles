@@ -34,7 +34,6 @@ namespace TestProgram1
         List<Emitter> EmitterList = new List<Emitter>();
 
         KeyboardState CurrentKeyboardState, PreviousKeyboardState;
-
         SpriteFont Font;
         
 
@@ -54,9 +53,10 @@ namespace TestProgram1
         
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
 
             Font = Content.Load<SpriteFont>("Font");
+
+            spriteBatch = new SpriteBatch(GraphicsDevice);
 
             ParticleTexture = Content.Load<Texture2D>("diamond");
             ParticleTexture2 = Content.Load<Texture2D>("BigShell");
@@ -71,7 +71,7 @@ namespace TestProgram1
 
             Emitter.UpdateManager = UpdateManager;
             Emitter.RenderManager = RenderManager;
-            
+
             //Emitter newEmitter = new Emitter(ParticleTexture, new Vector2(1280/2, 720/2), new Vector2(0, 0), new Vector2(3, 3), 
             //    new Vector2(6000, 6000), 1f, false, new Vector2(0, 0), new Vector2(0, 0), new Vector2(1, 1),
             //    Color.Green, Color.Fuchsia, 0f, -1f, 350, 1, false, new Vector2(1080, 1080), false);
@@ -84,12 +84,30 @@ namespace TestProgram1
             //new Vector2(500, 1500), 0.5f, false, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(1, 3),
             //    Color.Green, Color.Gold, 0.2f, -1f, 30, 30, false, new Vector2(1080, 1080), true);
 
-            
+
 
             //EmitterList.Add(newEmitter);
             //EmitterList.Add(newEmitter2);
             //EmitterList.Add(newEmitter3);
-            
+
+            Emitter newEmitter4 = new Emitter(ParticleTexture, new Vector2(800, 200), new Vector2(-40, 40), new Vector2(6, 10),
+                    new Vector2(1000, 1000), 0.99f, true, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(0.25f, 0.5f),
+                    new Color(Color.Orange.R, Color.Orange.G, Color.Orange.B, 100),
+                    new Color(Color.OrangeRed.R, Color.OrangeRed.G, Color.OrangeRed.B, 20),
+                    0.0f, -2f, 16, 1, false, new Vector2(1080, 1080), false,
+                    null, true, true, new Vector2(0, 0), new Vector2(0, 0), 0, true, new Vector2(0, 0), true, true, 2000, null, null, false);
+
+            EmitterList.Add(newEmitter4);
+
+            Emitter newEmitter5 = new Emitter(ParticleTexture, new Vector2(800, 200), new Vector2(-40, 40), new Vector2(6, 10),
+                    new Vector2(1000, 1000), 0.99f, true, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(0.25f, 0.5f),
+                    new Color(Color.Orange.R, Color.Orange.G, Color.Orange.B, 100),
+                    new Color(Color.OrangeRed.R, Color.OrangeRed.G, Color.OrangeRed.B, 20),
+                    0.0f, -2f, 16, 1, false, new Vector2(1080, 1080), false,
+                    null, true, true, new Vector2(0, 0), new Vector2(0, 0), 0, true, new Vector2(0, 0), true, true, 1500, null, null, false);
+
+            EmitterList.Add(newEmitter5);
+
         }
 
         protected override void UnloadContent()
@@ -103,21 +121,26 @@ namespace TestProgram1
             //EmitterList[1].Position = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
             CurrentKeyboardState = Keyboard.GetState();
 
-            if (CurrentKeyboardState.IsKeyUp(Keys.Space) &&
-                PreviousKeyboardState.IsKeyDown(Keys.Space))
-            {
-                for (int i = 0; i < 5; i++)
-                {
-                    Emitter newEmitter4 = new Emitter(ParticleTexture, new Vector2(800, 200), new Vector2(0, 360), new Vector2(6, 10),
-                    new Vector2(500, 1500), 0.99f, true, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(0.25f, 0.5f),
-                    new Color(Color.Orange.R, Color.Orange.G, Color.Orange.B, 100),
-                    new Color(Color.OrangeRed.R, Color.OrangeRed.G, Color.OrangeRed.B, 20), 
-                    0.05f, 2f, 16, 10, true, new Vector2(750, 800), false,
-                    null, true, true, new Vector2(12, 15), new Vector2(0, 180), 0.6f, true, new Vector2(0, 0), true, true, 2000, null, null, false);
+            //if (CurrentKeyboardState.IsKeyUp(Keys.Space) &&
+            //    PreviousKeyboardState.IsKeyDown(Keys.Space))
+            //{
+            //    for (int i = 0; i < 5; i++)
+            //    {
+            //        Emitter newEmitter4 = new Emitter(ParticleTexture, new Vector2(800, 200), new Vector2(0, 360), new Vector2(6, 10),
+            //        new Vector2(1000, 1000), 0.99f, true, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(0.25f, 0.5f),
+            //        new Color(Color.Orange.R, Color.Orange.G, Color.Orange.B, 100),
+            //        new Color(Color.OrangeRed.R, Color.OrangeRed.G, Color.OrangeRed.B, 20), 
+            //        0.05f, 2f, 16, 10, true, new Vector2(750, 800), false,
+            //        null, true, true, new Vector2(12, 15), new Vector2(0, 180), 0.6f, true, new Vector2(0, 0), true, true, 2000, null, null, false);
 
-                    EmitterList.Add(newEmitter4);
-                }
-            }
+            //        EmitterList.Add(newEmitter4);
+            //    }
+            //}
+
+            EmitterList[0].Position = new Vector2(0, 1080/2) + new Vector2(-200, (1080 / 2) * (float)Math.Sin((float)gameTime.TotalGameTime.TotalSeconds));
+
+            EmitterList[1].Position = new Vector2(0, 600) + new Vector2(-200, 600 * (float)Math.Cos((float)gameTime.TotalGameTime.TotalSeconds));
+
 
             foreach (Emitter emitter in EmitterList)
             {
@@ -142,7 +165,9 @@ namespace TestProgram1
             spriteBatch.DrawString(Font, "RenderDataObjects: " + RenderManager.RenderDataObjects.Count.ToString(), new Vector2(0, 24), Color.White);
             spriteBatch.DrawString(Font, "ParticleDataObjects: " + UpdateManager.ParticleDataObjects.Count.ToString(), new Vector2(0, 48), Color.White);
 
-            spriteBatch.End();            
+            spriteBatch.End();
+
+
             base.Draw(gameTime);
         }
 

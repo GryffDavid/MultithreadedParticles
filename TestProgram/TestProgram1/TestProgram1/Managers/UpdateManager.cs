@@ -34,21 +34,7 @@ namespace TestProgram1
                 ParticleData gameData = ParticleDataObjects[i];
                 float Rot;
 
-                if (gameData.FadeDelay > 0)
-                {
-                    gameData.CurrentFadeDelay += (float)GameTime.ElapsedGameTime.TotalMilliseconds;
-
-                    if (gameData.CurrentFadeDelay >= gameData.FadeDelay)
-                    {
-                        if (gameData.CurrentTime < gameData.MaxTime)
-                            gameData.CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                    }
-                }
-                else
-                {
-                    if (gameData.CurrentTime < gameData.MaxTime)
-                        gameData.CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                }
+                
 
                 #region Handle particle rotation
                 if (gameData.RotateVelocity == true)
@@ -61,66 +47,16 @@ namespace TestProgram1
                 }
                 #endregion
 
-                gameData.Velocity.Y += gameData.Gravity;
 
-                #region Handle bouncing
-                if (gameData.CanBounce == true)
-                    if (gameData.Position.Y >= gameData.BounceY && gameData.HasBounced == false)
-                    {
-                        if (gameData.HardBounce == true)
-                            gameData.Position.Y -= gameData.Velocity.Y;
+                gameData.Update(gameTime);
 
-                        gameData.RotateVelocity = false;
-                        gameData.Velocity.Y = (-gameData.Velocity.Y / 3);
-                        gameData.Velocity.X = (gameData.Velocity.X / 3);
-                        gameData.RotationIncrement = (gameData.RotationIncrement * 3);
-                        gameData.HasBounced = true;
-                    }
-
-                if (gameData.StopBounce == true &&
-                    gameData.HasBounced == true &&
-                    gameData.Position.Y > gameData.BounceY)
-                {
-                    gameData.Velocity.Y = (-gameData.Velocity.Y / 2);
-
-                    gameData.Velocity.X *= 0.9f;
-
-                    gameData.RotationIncrement = MathHelper.Lerp(gameData.RotationIncrement, 0, 0.2f * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f));
-
-                    if (gameData.Velocity.Y < 0.2f && gameData.Velocity.Y > 0)
-                    {
-                        gameData.Velocity.Y = 0; 
-                    }
-
-                    if (gameData.Velocity.Y > -0.2f && gameData.Velocity.Y < 0)
-                    {
-                        gameData.Velocity.Y = 0;
-                    }
-
-                    if (gameData.Velocity.X < 0.2f && gameData.Velocity.X > 0)
-                    {
-                        gameData.Velocity.X = 0;
-                    }
-
-                    if (gameData.Velocity.X > -0.2f && gameData.Velocity.X < 0)
-                    {
-                        gameData.Velocity.X = 0;
-                    }
-                }
-                #endregion
 
                 #region Update position
 
                 Vector2 newPos = gameData.Position + gameData.Velocity;
                 #endregion
 
-                #region Handle Friction
-                if (gameData.Friction != new Vector2(0, 0))
-                {
-                    gameData.Velocity.Y = MathHelper.Lerp(gameData.Velocity.Y, 0, gameData.Friction.Y * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f));
-                    gameData.Velocity.X = MathHelper.Lerp(gameData.Velocity.X, 0, gameData.Friction.X * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f));
-                }
-                #endregion
+               
                 
 
                 float percTime = gameData.CurrentTime / gameData.MaxTime;
@@ -148,18 +84,15 @@ namespace TestProgram1
                 #endregion
 
                 #region Fade Colours
-                Color newCol = Color.Lerp(gameData.StartColor, gameData.EndColor, percTime); 
+                Color newCol = Color.Lerp(gameData.StartColor, gameData.EndColor, percTime);
                 #endregion
 
-                
-
 
                 
 
-                if (gameData.CurrentTime >= gameData.MaxTime)
-                {
-                    gameData.Active = false;
-                }
+                
+
+                
 
                 //transparency = MathHelper.Lerp(gameData.StartingTransparency, 0, percTime);
 

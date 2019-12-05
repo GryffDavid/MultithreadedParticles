@@ -63,6 +63,8 @@ namespace TestProgram1
                 }                
             }
 
+            //RenderDataObjects.RemoveAll(Data => Data.Active == false);
+
             #region Draw particles
             foreach (RenderData renderData in RenderDataObjects)
             {
@@ -71,7 +73,7 @@ namespace TestProgram1
                     default:
                         Orientation = SpriteEffects.None;
                         break;
-                    
+
                     case 1:
                         Orientation = SpriteEffects.FlipHorizontally;
                         break;
