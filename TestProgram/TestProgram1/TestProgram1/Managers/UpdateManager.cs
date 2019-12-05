@@ -19,9 +19,8 @@ namespace TestProgram1
         public List<ParticleData> ParticleDataObjects { get; set; }
         public Stopwatch FrameWatch { get; set; }
         public DoubleBuffer DoubleBuffer;
-        public Thread RunningThread;        
-        public MouseState CurrentMouseState, PreviousMouseState;
-        Rectangle ScreenRect = new Rectangle(0, 0, 1280, 720);
+        public Thread RunningThread;
+        Rectangle ScreenRect = new Rectangle(0, 0, 1920, 1080);
 
         static Random Random = new Random();
 
@@ -42,14 +41,13 @@ namespace TestProgram1
             for (int i = 0; i < ParticleDataObjects.Count; i++)
             {
                 ParticleData gameData = ParticleDataObjects[i];
-
-                Vector2 newPos = gameData.Position + gameData.Velocity;
-                float Rot = gameData.Rotation + 3f;
-                
                 gameData.CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
+                Vector2 newPos = gameData.Position + gameData.Velocity;
+                float Rot = gameData.Rotation + 3f;               
+                
                 float percTime = gameData.CurrentTime / gameData.MaxTime;
-                Color newCol = Color.Lerp(Color.Red, Color.Yellow, percTime);
+                Color newCol = Color.Lerp(gameData.StartColor, gameData.EndColor, percTime);
 
                 ChangeMessage msg = new ChangeMessage()
                 {
@@ -71,7 +69,6 @@ namespace TestProgram1
                     msg.Position = newPos;                    
                     msg.Rotation = Rot;
                     msg.Color = newCol;
-                    msg.ButtWorks = 1;
                     MessageBuffer.Add(msg);
 
                     gameData.Position = newPos;
@@ -81,14 +78,39 @@ namespace TestProgram1
             }
         }
 
-
-        private void Run()
+        public void AddParticle(Vector2 pos, Vector2 angleRange, Vector2 speedRange, Color startColor, Color endColor, out ParticleData gameData, out RenderData renderData)
         {
-            while(true)
+            float myAngle, mySpeed;
+            Vector2 Direction, myVelocity;
+
+            mySpeed = (float)DoubleRange(speedRange.X, speedRange.Y);
+            myAngle = -MathHelper.ToRadians((float)DoubleRange(angleRange.X, angleRange.Y));
+
+            
+            Direction.X = (float)Math.Cos(myAngle);
+            Direction.Y = (float)Math.Sin(myAngle);
+
+            myVelocity = Direction * mySpeed;
+
+            gameData = new ParticleData()
             {
-                DoFrame();
-            }
+                Position = pos,
+                Angle = angleRange,
+                CurrentTime = 0,
+                MaxTime = Random.Next(500, 2000),
+                Velocity = myVelocity,
+                StartColor = startColor,
+                EndColor = endColor,
+            };
+
+            renderData = new RenderData()
+            {
+                Position = gameData.Position,
+                Color = startColor,
+                Rotation = Random.Next(0, 360)
+            };
         }
+
 
         public void StartOnNewThread()
         {
@@ -97,6 +119,13 @@ namespace TestProgram1
             RunningThread.Start();
         }
 
+        private void Run()
+        {
+            while (true)
+            {
+                DoFrame();
+            }
+        }
 
         public void DoFrame()
         {
@@ -104,21 +133,10 @@ namespace TestProgram1
             Update(GameTime);
             DoubleBuffer.SubmitUpdate();
         }
-          
 
-        public void AddParticle(Vector2 pos, Vector2 vel, Color color, out ParticleData gameData, out RenderData renderData)
+        public double DoubleRange(double one, double two)
         {
-            gameData = new ParticleData();
-            gameData.Position = pos;
-            gameData.Velocity = vel;
-            gameData.CurrentTime = 0;
-            gameData.MaxTime = Random.Next(500, 2000);
-
-            renderData = new RenderData();
-            renderData.Position = gameData.Position;
-            renderData.Color = color;
-            renderData.Rotation = Random.Next(0, 360);
-            
+            return one + Random.NextDouble() * (two - one);
         }
     }
 }

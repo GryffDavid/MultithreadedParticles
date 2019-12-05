@@ -42,8 +42,8 @@ namespace TestProgram1
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferHeight = 1080;
         }
         
         protected override void Initialize()
@@ -79,11 +79,11 @@ namespace TestProgram1
         {
             CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if (CurrentTime > 15)
+            if (CurrentTime > 500)
             {
-                for (int i = 0; i < 150; i++)
+                for (int i = 0; i < 200; i++)
                 {
-                    UpdateManager.AddParticle(new Vector2(400, 400), new Vector2(RandomFloat(-4, 4), RandomFloat(-4, 4)), RandomColor(), out gameData, out renderData);
+                    UpdateManager.AddParticle(new Vector2(1920/2, 1080/2), new Vector2(0, 360), new Vector2(2, 5), Color.Yellow, Color.Purple, out gameData, out renderData);
                     RenderManager.RenderDataObjects.Add(renderData);
                     UpdateManager.ParticleDataObjects.Add(gameData);
                 }
@@ -98,12 +98,15 @@ namespace TestProgram1
         {
             DoubleBuffer.GlobalStartFrame(gameTime);
             graphics.GraphicsDevice.Clear(Color.Black);
-            RenderManager.DoFrame();
+            
 
             spriteBatch.Begin();
+            RenderManager.DoFrame(spriteBatch);
+
             spriteBatch.DrawString(Font, "ChangeMessageCount: " + DoubleBuffer.ChangeMessageCount.ToString(), new Vector2(0, 0), Color.White);
             spriteBatch.DrawString(Font, "RenderDataObjects: " + RenderManager.RenderDataObjects.Count.ToString(), new Vector2(0, 24), Color.White);
             spriteBatch.DrawString(Font, "ParticleDataObjects: " + UpdateManager.ParticleDataObjects.Count.ToString(), new Vector2(0, 48), Color.White);
+
             spriteBatch.End();
             base.Draw(gameTime);
         }

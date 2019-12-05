@@ -9,7 +9,8 @@ namespace TestProgram1
     class ParticleData
     {
         //What is needed to perform updates
-        public Vector2 Position, Velocity;
+        public Vector2 Position, Angle, Velocity;
+        public Color StartColor, EndColor;
         public float Rotation, CurrentTime, MaxTime;
     }
 }

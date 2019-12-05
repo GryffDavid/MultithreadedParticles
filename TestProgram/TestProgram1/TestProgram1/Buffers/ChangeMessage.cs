@@ -24,8 +24,8 @@ namespace TestProgram1
 
         [FieldOffset(20)]
         public Color Color;
-
+        
         [FieldOffset(24)]
-        public float ButtWorks;
+        public float Velocity;
     }
 }
