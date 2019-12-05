@@ -65,18 +65,19 @@ namespace TestProgram1
                     ID = i
                 };
 
-                #region Remove particle if it leaves the screen
+
                 if (gameData.CurrentTime > gameData.MaxTime)
                 {
                     msg.MessageType = ChangeMessageType.DeleteRenderData;
                     ParticleDataObjects.Remove(gameData);
                     MessageBuffer.Add(msg);
+                    i--;
                 }
-                #endregion
-                else
+
+                if (gameData.CurrentTime <= gameData.MaxTime)
                 {
                     msg.MessageType = ChangeMessageType.UpdateParticle;
-                    msg.Position = newPos;                    
+                    msg.Position = newPos;
                     msg.Rotation = Rot;
                     msg.Color = newCol;
                     msg.Scale = newScale;
@@ -85,7 +86,6 @@ namespace TestProgram1
 
                     gameData.Position = newPos;
                     gameData.Rotation = Rot;
-                    
                 }
             }
         }

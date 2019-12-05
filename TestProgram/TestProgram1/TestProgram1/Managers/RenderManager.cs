@@ -19,6 +19,8 @@ namespace TestProgram1
         protected ChangeBuffer MessageBuffer;
         protected Game Game;
 
+        public SpriteFont Font;
+
         //Texture2D ParticleTexture;
         //Texture2D texture,
         //Vector2 position, 
@@ -46,6 +48,11 @@ namespace TestProgram1
         //float fadeDelay
         //bool sortDepth
         //bool grow
+
+        public void LoadContent(ContentManager content)
+        {
+            Font = content.Load<SpriteFont>("Font");
+        }
 
         public RenderManager(DoubleBuffer doubleBuffer, Game game)
         {
@@ -87,6 +94,8 @@ namespace TestProgram1
             #region Draw particles
             foreach (RenderData renderData in RenderDataObjects)
             {
+                //spriteBatch.DrawString(Font, RenderDataObjects.IndexOf(renderData).ToString(), renderData.Position, Color.White);
+
                 spriteBatch.Draw(renderData.Texture, new
                     Rectangle((int)renderData.Position.X, (int)renderData.Position.Y,
                                    (int)(renderData.Texture.Width * renderData.Scale), (int)(renderData.Texture.Height * renderData.Scale)),

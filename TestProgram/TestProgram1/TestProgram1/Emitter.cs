@@ -174,7 +174,7 @@ namespace TestProgram1
         {
             CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if (CurrentTime > MaxTime)
+            if (CurrentTime > Interval)
             {
                 for (int i = 0; i < Burst; i++)
                 {

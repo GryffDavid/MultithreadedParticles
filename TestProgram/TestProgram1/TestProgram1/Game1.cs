@@ -42,6 +42,7 @@ namespace TestProgram1
             Content.RootDirectory = "Content";
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
+            //graphics.IsFullScreen = true;
         }
         
         protected override void Initialize()
@@ -59,6 +60,8 @@ namespace TestProgram1
 
             DoubleBuffer = new DoubleBuffer();
             RenderManager = new RenderManager(DoubleBuffer, this);
+            RenderManager.LoadContent(Content);
+
             UpdateManager = new UpdateManager(DoubleBuffer, this);    
             
             UpdateManager.StartOnNewThread();
@@ -66,10 +69,11 @@ namespace TestProgram1
             Emitter.UpdateManager = UpdateManager;
             Emitter.RenderManager = RenderManager;
 
+            //Color newCol = new Color(Random.Next(0, 255), Random.Next(0, 255), Random.Next(0, 255));
 
-            Emitter newEmitter = new Emitter(ParticleTexture, new Vector2(500, 500), new Vector2(0, 90), new Vector2(3, 5), 
-                new Vector2(500, 1500), 0.5f, true, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(1, 3),
-                Color.Purple, Color.Fuchsia, 0.2f, -1f, 30, 5, false, new Vector2(1080, 1080), true);
+            Emitter newEmitter = new Emitter(ParticleTexture, new Vector2(1280/2, 720/2), new Vector2(0, 0), new Vector2(3, 3), 
+                new Vector2(6000, 6000), 1f, false, new Vector2(0, 0), new Vector2(0, 0), new Vector2(1, 1),
+                Color.Green, Color.Fuchsia, 0f, -1f, 350, 1, false, new Vector2(1080, 1080), false);
 
             Emitter newEmitter2 = new Emitter(ParticleTexture, new Vector2(1050, 500), new Vector2(90, 180), new Vector2(3, 5), 
             new Vector2(500, 1500), 0.5f, false, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(1, 3),
