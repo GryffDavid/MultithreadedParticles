@@ -80,7 +80,6 @@ namespace TestProgram1
             spriteBatch.End();
         }
 
-
         public void DoFrame()
         {
             DoubleBuffer.StartRenderProcessing(out MessageBuffer, out GameTime);

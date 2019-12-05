@@ -46,8 +46,7 @@ namespace TestProgram1
                 ChangeMessage msg = new ChangeMessage();
                 msg.ID = i;
 
-                if (!ScreenRect.Contains(new Point((int)newPos.X, (int)newPos.Y)) ||
-                    gameData.Velocity == Vector2.Zero)
+                if (!ScreenRect.Contains(new Point((int)newPos.X, (int)newPos.Y)))
                 {
                     msg.MessageType = ChangeMessageType.DeleteRenderData;
                     ParticleDataObjects.Remove(gameData);
