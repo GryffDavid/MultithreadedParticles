@@ -28,17 +28,13 @@ namespace TestProgram1
         DoubleBuffer DoubleBuffer;
         RenderManager RenderManager;
         UpdateManager UpdateManager;
-
-        RenderData renderData;
-        ParticleData gameData;
-
+        
         static Random Random = new Random();
 
         SpriteFont Font;
 
         List<Emitter> EmitterList = new List<Emitter>();
-
-        float CurrentTime;
+        
 
         public Game1()
         {
@@ -59,25 +55,23 @@ namespace TestProgram1
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             ParticleTexture = Content.Load<Texture2D>("diamond");
-
             Font = Content.Load<SpriteFont>("Font");
 
             DoubleBuffer = new DoubleBuffer();
-
             RenderManager = new RenderManager(DoubleBuffer, this);
-
-            UpdateManager = new UpdateManager(DoubleBuffer, this);            
+            UpdateManager = new UpdateManager(DoubleBuffer, this);    
+            
             UpdateManager.StartOnNewThread();
 
-            //UpdateManager.RunningThread.IsBackground = false;
-            //UpdateManager.RunningThread.Priority = ThreadPriority.AboveNormal;
-
-            UpdateManager.RunningThread.Name = "UPDATE_MANAGER";
-            Debug.WriteLine(UpdateManager.RunningThread.ManagedThreadId.ToString());
+            Emitter.UpdateManager = UpdateManager;
+            Emitter.RenderManager = RenderManager;
 
 
-            Emitter newEmitter = new Emitter(RenderManager, UpdateManager, ParticleTexture, new Vector2(500, 500));
+            Emitter newEmitter = new Emitter(ParticleTexture, new Vector2(500, 500));
+            Emitter newEmitter2 = new Emitter(ParticleTexture, new Vector2(1050, 500));
+
             EmitterList.Add(newEmitter);
+            EmitterList.Add(newEmitter2);
         }
         
         protected override void UnloadContent()
@@ -93,35 +87,16 @@ namespace TestProgram1
                 emitter.Update(gameTime);
             }
 
-            //CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            //if (CurrentTime > 1)
-            //{
-            //    for (int i = 0; i < 5; i++)
-            //    {
-            //        UpdateManager.AddParticle(ParticleTexture, new Vector2(Mouse.GetState().X, Mouse.GetState().Y), 
-            //            new Vector2(0, 360), new Vector2(2, 3),
-            //            new Vector2(2, 2), Color.OrangeRed, Color.Yellow, 0.02f,
-            //            true, false, new Vector2(0, 360), new Vector2(-5, 5), 1f, new Vector2(2500, 4000),
-            //            out gameData, out renderData);
-
-            //        RenderManager.RenderDataObjects.Add(renderData);
-            //        UpdateManager.ParticleDataObjects.Add(gameData);
-            //    }
-
-            //    CurrentTime = 0;
-            //}
-
             base.Update(gameTime);
         }
         
         protected override void Draw(GameTime gameTime)
         {
             DoubleBuffer.GlobalStartFrame(gameTime);
-            graphics.GraphicsDevice.Clear(Color.Black);
-            
+            graphics.GraphicsDevice.Clear(Color.Black);            
 
             spriteBatch.Begin();
+
             RenderManager.DoFrame(spriteBatch);
 
             spriteBatch.DrawString(Font, "ChangeMessageCount: " + DoubleBuffer.ChangeMessageCount.ToString(), new Vector2(0, 0), Color.White);
