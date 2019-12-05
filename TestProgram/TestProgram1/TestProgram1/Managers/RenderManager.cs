@@ -17,22 +17,31 @@ namespace TestProgram1
         private GameTime GameTime;
 
         protected ChangeBuffer MessageBuffer;
-                
+
+        //Texture2D Texture;
+
         public RenderManager(DoubleBuffer doubleBuffer)
         {
             DoubleBuffer = doubleBuffer;
             RenderDataObjects = new List<RenderData>();
         }
-        
+
+        public void LoadContent(ContentManager content)
+        {
+            //Texture = content.Load<Texture2D>("diamond");
+        }
+                
         public void DoFrame(SpriteBatch spriteBatch)
         {
+            SpriteEffects Orientation = SpriteEffects.None;
+
             DoubleBuffer.StartRenderProcessing(out MessageBuffer, out GameTime);
 
             foreach (ChangeMessage msg in MessageBuffer.Messages)
             {
                 switch (msg.MessageType)
                 {
-                    #region UpdateParticlePosition
+                    #region UpdateParticle
                     case ChangeMessageType.UpdateParticle:
                         {
                             RenderDataObjects[msg.ID].Position = msg.Position;
@@ -51,17 +60,32 @@ namespace TestProgram1
                         }
                         break;
                     #endregion
-                }
+                }                
             }
 
             #region Draw particles
             foreach (RenderData renderData in RenderDataObjects)
             {
+                switch (renderData.Orientation)
+                {
+                    default:
+                        Orientation = SpriteEffects.None;
+                        break;
+                    
+                    case 1:
+                        Orientation = SpriteEffects.FlipHorizontally;
+                        break;
+
+                    case 2:
+                        Orientation = SpriteEffects.FlipVertically;
+                        break;
+                }
+
                 spriteBatch.Draw(renderData.Texture, new
                     Rectangle((int)renderData.Position.X, (int)renderData.Position.Y,
                               (int)(renderData.Texture.Width * renderData.Scale), (int)(renderData.Texture.Height * renderData.Scale)),
                     null, renderData.Color * renderData.Transparency, renderData.Rotation,
-                    new Vector2(renderData.Texture.Width / 2, renderData.Texture.Height / 2), SpriteEffects.None, 0);
+                    new Vector2(renderData.Texture.Width / 2, renderData.Texture.Height / 2), Orientation, 0);
             }
             #endregion
 

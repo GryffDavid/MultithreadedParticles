@@ -32,20 +32,48 @@ namespace TestProgram1
             for (int i = 0; i < ParticleDataObjects.Count; i++)
             {
                 ParticleData gameData = ParticleDataObjects[i];
+                float Rot;
 
                 gameData.CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 gameData.Velocity.Y += gameData.Gravity;
 
+                if (gameData.Friction != new Vector2(0, 0))
+                {
+                    gameData.Velocity.Y = MathHelper.Lerp(gameData.Velocity.Y, 0, gameData.Friction.Y * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f));
+                    gameData.Velocity.X = MathHelper.Lerp(gameData.Velocity.X, 0, gameData.Friction.X * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f));
+                }
+
                 Vector2 newPos = gameData.Position + gameData.Velocity;
-                float Rot = gameData.Rotation + MathHelper.ToRadians(gameData.RotationIncrement);
-                float newScale = gameData.Scale;
+
+
+                if (gameData.RotateVelocity == true)
+                {
+                    Rot = (float)Math.Atan2(gameData.Velocity.Y, gameData.Velocity.X);                    
+                }
+                else
+                {
+                    Rot = gameData.Rotation + MathHelper.ToRadians(gameData.RotationIncrement);
+                }
+            
+                               
+
+                float newScale = gameData.CurrentScale;
                 float transparency = gameData.StartingTransparency;
 
                 float percTime = gameData.CurrentTime / gameData.MaxTime;
                 Color newCol = Color.Lerp(gameData.StartColor, gameData.EndColor, percTime);
 
-                if (gameData.Shrink == true)
-                    newScale = MathHelper.Lerp(gameData.Scale, 0, percTime);
+                //if (gameData.Shrink == true)
+                //    newScale = MathHelper.Lerp(gameData.CurrentScale, 0, percTime);
+
+                if (gameData.Shrink == true && gameData.Grow == false)
+                    newScale = MathHelper.Lerp(gameData.MaxScale, 0, percTime);
+
+                if (gameData.Grow == true && gameData.Shrink == false)
+                    newScale = gameData.MaxScale * ((1 / (gameData.MaxTime + 0)) * (gameData.CurrentTime + 0));
+
+                if (gameData.Shrink == true && gameData.Grow == true)
+                    newScale = gameData.MaxScale * (float)Math.Sin(Math.PI * percTime);
 
                 if (gameData.Fade == true)
                     transparency = MathHelper.Lerp(gameData.StartingTransparency, 0, percTime);
@@ -81,7 +109,8 @@ namespace TestProgram1
 
         public void AddParticle(Texture2D texture, Vector2 pos, Vector2 angleRange, Vector2 speedRange, Vector2 scaleRange, 
             Color startColor, Color endColor, float gravity, bool shrink, bool fade, Vector2 startingRotation, 
-            Vector2 rotationIncrement, float startingTransparency, Vector2 timeRange,
+            Vector2 rotationIncrement, float startingTransparency, Vector2 timeRange, bool grow, bool rotateVelocity, 
+            Vector2 friction, int orientation, float fadeDelay,
             out ParticleData gameData, out RenderData renderData)
         {
             float myAngle, mySpeed, myScale, myRotation, myIncrement, myTime;
@@ -109,22 +138,31 @@ namespace TestProgram1
                 StartColor = startColor,
                 EndColor = endColor,
                 Gravity = gravity,
-                Scale = myScale,
+                CurrentScale = myScale,
+                MaxScale = myScale,
                 Shrink = shrink,
+                Grow = grow,
                 Fade = fade,
+                Friction = friction,
                 StartingTransparency = startingTransparency,
                 Rotation = myRotation,
-                RotationIncrement = myIncrement
+                RotationIncrement = myIncrement,
+                RotateVelocity = rotateVelocity,
+                FadeDelay = fadeDelay
             };
+
+            if (grow == true)
+                myScale = 0;
 
             renderData = new RenderData()
             {
                 Texture = texture,
                 Position = gameData.Position,
                 Color = startColor,
-                Rotation = Random.Next(0, 360),
+                Rotation = myRotation,
                 Scale = myScale,
-                Transparency = 0.5f
+                Transparency = startingTransparency,
+                Orientation = orientation
             };
         }
 

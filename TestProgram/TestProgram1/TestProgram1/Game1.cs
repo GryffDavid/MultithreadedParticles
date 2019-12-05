@@ -23,7 +23,7 @@ namespace TestProgram1
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Texture2D ParticleTexture;
+        Texture2D ParticleTexture, ParticleTexture2;
 
         DoubleBuffer DoubleBuffer;
         RenderManager RenderManager;
@@ -53,9 +53,12 @@ namespace TestProgram1
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             ParticleTexture = Content.Load<Texture2D>("diamond");
+            ParticleTexture2 = Content.Load<Texture2D>("BigShell");
 
             DoubleBuffer = new DoubleBuffer();
             RenderManager = new RenderManager(DoubleBuffer);
+            RenderManager.LoadContent(Content);
+
             UpdateManager = new UpdateManager(DoubleBuffer);    
             
             UpdateManager.StartOnNewThread();
@@ -69,20 +72,21 @@ namespace TestProgram1
 
             Emitter newEmitter2 = new Emitter(ParticleTexture, new Vector2(1050, 500), new Vector2(90, 180), new Vector2(3, 5), 
             new Vector2(500, 1500), 0.5f, false, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(1, 3),
-                Color.Red, Color.Orange, 0.2f, -1f, 15, 200, false, new Vector2(1080, 1080), true);
+                Color.Red, Color.Orange, 0.2f, 5f, 15, 30, false, new Vector2(1080, 1080), true);
 
-            //Emitter newEmitter3 = new Emitter(ParticleTexture, new Vector2(800, 80), new Vector2(0, 180), new Vector2(3, 5),
-            //new Vector2(500, 1500), 0.5f, false, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(1, 3),
-            //    Color.Green, Color.Gold, 0.2f, -1f, 30, 200, false, new Vector2(1080, 1080), true);
+            Emitter newEmitter3 = new Emitter(ParticleTexture, new Vector2(800, 80), new Vector2(0, 180), new Vector2(3, 5),
+            new Vector2(500, 1500), 0.5f, false, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(1, 3),
+                Color.Green, Color.Gold, 0.2f, -1f, 30, 30, false, new Vector2(1080, 1080), true);
 
-            //Emitter newEmitter4 = new Emitter(ParticleTexture, new Vector2(800, 900), new Vector2(0, 180), new Vector2(3, 5),
-            //new Vector2(500, 1500), 0.5f, false, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(1, 3),
-            //    Color.Blue, Color.LightSkyBlue, 0.2f, -1f, 30, 200, false, new Vector2(1080, 1080), true);
+            Emitter newEmitter4 = new Emitter(ParticleTexture2, new Vector2(800, 200), new Vector2(0, 180), new Vector2(3, 5),
+            new Vector2(500, 1500), 0.99f, false, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(1, 3),
+                Color.White, Color.White, 0.2f, -1f, 250, 5, false, new Vector2(1080, 1080), true,
+                null, null, null, null, null, null, true, new Vector2(0, 0), true, true, null, null, null, true);
 
-            EmitterList.Add(newEmitter);
-            EmitterList.Add(newEmitter2);
+            //EmitterList.Add(newEmitter);
+            //EmitterList.Add(newEmitter2);
             //EmitterList.Add(newEmitter3);
-            //EmitterList.Add(newEmitter4);
+            EmitterList.Add(newEmitter4);
         }
 
         protected override void UnloadContent()

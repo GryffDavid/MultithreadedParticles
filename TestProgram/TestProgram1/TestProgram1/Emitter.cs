@@ -23,7 +23,8 @@ namespace TestProgram1
         public string TextureName;
         public int Burst;
         public double IntervalTime, CurrentTime, MaxTime;
-        public SpriteEffects Orientation = SpriteEffects.None;
+        //public SpriteEffects Orientation = SpriteEffects.None;
+        public int Orientation = 0;
         public object Tether;
         public float BounceY;
         public float DrawDepth;
@@ -165,28 +166,61 @@ namespace TestProgram1
 
         public void Update(GameTime gameTime)
         {
-            CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            IntervalTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if (CurrentTime > Interval)
+            if (ActiveSeconds > 0)
+            {
+                CurrentTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+                if (CurrentTime > ActiveSeconds * 1000)
+                {
+                    AddMore = false;
+                }
+            }
+
+
+            if (FlipHor == true && FlipVer == false)
+            {
+                Orientation = RandomOrientation(SpriteEffects.None, SpriteEffects.FlipHorizontally);
+                //Get back None or FlipHor
+                //0
+            }
+
+            if (FlipHor == false && FlipVer == true)
+            {
+                Orientation = RandomOrientation(SpriteEffects.None, SpriteEffects.FlipVertically);
+                //Get back None or FlipVer
+                //1
+            }
+
+            if (FlipHor == true && FlipVer == true)
+            {
+                Orientation = RandomOrientation(SpriteEffects.None, SpriteEffects.FlipVertically, SpriteEffects.FlipHorizontally);
+                //Get back None, FlipHor, FlipVer
+                //2
+            }
+
+            if (IntervalTime > Interval && AddMore == true)
             {
                 for (int i = 0; i < Burst; i++)
                 {
                     UpdateManager.AddParticle(
                             Texture, Position, AngleRange, SpeedRange, ScaleRange, StartColor, EndColor, 
                             Gravity, Shrink, Fade, StartingRotationRange, RotationIncrementRange, 
-                            Transparency, TimeRange, out gameData, out renderData);
+                            Transparency, TimeRange, Grow, RotateVelocity, Friction, Orientation, FadeDelay,
+                            out gameData, out renderData);
 
                     RenderManager.RenderDataObjects.Add(renderData);
                     UpdateManager.ParticleDataObjects.Add(gameData);
                 }
 
-                CurrentTime = 0;
+                IntervalTime = 0;
             }
         }
 
-        private SpriteEffects RandomOrientation(params SpriteEffects[] Orientations)
+        private int RandomOrientation(params SpriteEffects[] Orientations)
         {
-            return Orientations[Random.Next(0, Orientations.Length)];
+            return (int)Orientations[Random.Next(0, Orientations.Length)];
         }
 
         public double DoubleRange(double one, double two)
