@@ -46,7 +46,8 @@ namespace TestProgram1
                 ChangeMessage msg = new ChangeMessage();
                 msg.ID = i;
 
-                if (!ScreenRect.Contains(new Point((int)newPos.X, (int)newPos.Y)))
+                if (!ScreenRect.Contains(new Point((int)newPos.X, (int)newPos.Y)) ||
+                    gameData.Velocity == Vector2.Zero)
                 {
                     msg.MessageType = ChangeMessageType.DeleteRenderData;
                     ParticleDataObjects.Remove(gameData);
@@ -89,14 +90,15 @@ namespace TestProgram1
         }
           
 
-        public void AddParticle(Vector2 pos, Vector2 vel, out ParticleData gameData, out RenderData renderData)
+        public void AddParticle(Vector2 pos, Vector2 vel, Color color, out ParticleData gameData, out RenderData renderData)
         {
             gameData = new ParticleData();
             gameData.Position = pos;
-            gameData.Velocity = vel;
+            gameData.Velocity = vel;            
 
             renderData = new RenderData();
             renderData.Position = gameData.Position;
+            renderData.Color = color;
         }
     }
 }

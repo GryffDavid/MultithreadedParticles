@@ -75,7 +75,7 @@ namespace TestProgram1
             spriteBatch.Begin();
             foreach (RenderData renderData in RenderDataObjects)
             {
-                spriteBatch.Draw(ParticleTexture, renderData.Position, Color.White);
+                spriteBatch.Draw(ParticleTexture, renderData.Position, renderData.Color);
             }
             spriteBatch.End();
         }

@@ -62,6 +62,7 @@ namespace TestProgram1
 
             UpdateManager = new UpdateManager(DoubleBuffer, this);            
             UpdateManager.StartOnNewThread();
+            Debug.WriteLine(UpdateManager.RunningThread.ManagedThreadId.ToString());
 
             //RenderData renderData;
             //ParticleData gameData;
@@ -70,15 +71,15 @@ namespace TestProgram1
             //RenderManager.RenderDataObjects.Add(renderData);
             //UpdateManager.ParticleDataObjects.Add(gameData);
 
-            for (int i = 0; i < 1600; i++)
-            {
-                RenderData renderData;
-                ParticleData gameData;
+            //for (int i = 0; i < 1600; i++)
+            //{
+            //    RenderData renderData;
+            //    ParticleData gameData;
 
-                UpdateManager.AddParticle(new Vector2(400, 400), new Vector2(0, -1), out gameData, out renderData);
-                RenderManager.RenderDataObjects.Add(renderData);
-                UpdateManager.ParticleDataObjects.Add(gameData);
-            }            
+            //    UpdateManager.AddParticle(new Vector2(400, 400), new Vector2(Random.Next(-4, 4), Random.Next(-4, 4)), out gameData, out renderData);
+            //    RenderManager.RenderDataObjects.Add(renderData);
+            //    UpdateManager.ParticleDataObjects.Add(gameData);
+            //}            
         }
         
         protected override void UnloadContent()
@@ -89,17 +90,17 @@ namespace TestProgram1
         
         protected override void Update(GameTime gameTime)
         {
-            //CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            //if (CurrentTime > 100)
-            //{
-            //    RenderData renderData;
-            //    ParticleData gameData;
+            if (CurrentTime > 100)
+            {
+                RenderData renderData;
+                ParticleData gameData;
 
-            //    UpdateManager.AddParticle(new Vector2(400, 400), new Vector2(Random.Next(-4, 4), Random.Next(-4, 4)), out gameData, out renderData);
-            //    RenderManager.RenderDataObjects.Add(renderData);
-            //    UpdateManager.ParticleDataObjects.Add(gameData);
-            //}
+                UpdateManager.AddParticle(new Vector2(1280/2, 720/2), new Vector2(Random.Next(-2, 2), Random.Next(-2, 2)), RandomColor(), out gameData, out renderData);
+                RenderManager.RenderDataObjects.Add(renderData);
+                UpdateManager.ParticleDataObjects.Add(gameData);
+            }
 
             base.Update(gameTime);
         }
@@ -133,6 +134,11 @@ namespace TestProgram1
         {
             if (UpdateManager.RunningThread != null)
                 UpdateManager.RunningThread.Abort();
+        }
+
+        public Color RandomColor()
+        {
+            return new Color(Random.Next(0, 255) / 255f, Random.Next(0, 255) / 255f, Random.Next(0, 255) / 255f);
         }
     }
 }
