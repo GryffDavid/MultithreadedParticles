@@ -16,7 +16,6 @@ namespace TestProgram1
     public enum ChangeMessageType
     {
         UpdateParticle,
-        CreateNewRenderData,
         DeleteRenderData,
     }
 

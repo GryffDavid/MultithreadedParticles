@@ -45,8 +45,11 @@ namespace TestProgram1
 
                 Vector2 newPos = gameData.Position + gameData.Velocity;
                 float Rot = gameData.Rotation + 3f;
-
+                
                 gameData.CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+                float percTime = gameData.CurrentTime / gameData.MaxTime;
+                Color newCol = Color.Lerp(Color.Red, Color.Yellow, percTime);
 
                 ChangeMessage msg = new ChangeMessage()
                 {
@@ -65,11 +68,14 @@ namespace TestProgram1
                 else
                 {
                     msg.MessageType = ChangeMessageType.UpdateParticle;
-                    msg.Position = newPos;
+                    msg.Position = newPos;                    
                     msg.Rotation = Rot;
+                    msg.Color = newCol;
+                    msg.ButtWorks = 1;
                     MessageBuffer.Add(msg);
+
                     gameData.Position = newPos;
-                    gameData.Rotation = Rot;                    
+                    gameData.Rotation = Rot;
                     
                 }
             }
@@ -106,7 +112,7 @@ namespace TestProgram1
             gameData.Position = pos;
             gameData.Velocity = vel;
             gameData.CurrentTime = 0;
-            gameData.MaxTime = 1000f;
+            gameData.MaxTime = Random.Next(500, 2000);
 
             renderData = new RenderData();
             renderData.Position = gameData.Position;

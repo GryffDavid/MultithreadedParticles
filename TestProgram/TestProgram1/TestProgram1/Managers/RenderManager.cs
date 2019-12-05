@@ -53,25 +53,7 @@ namespace TestProgram1
                         {
                             RenderDataObjects[msg.ID].Position = msg.Position;
                             RenderDataObjects[msg.ID].Rotation = msg.Rotation;
-                        }
-                        break;
-                    #endregion
-
-                    #region CreateNewRenderData
-                    case ChangeMessageType.CreateNewRenderData:
-                        {
-                            if (RenderDataObjects.Count == msg.ID)
-                            {
-                                RenderData newRenderData = new RenderData();
-                                newRenderData.Position = msg.Position;
-                                newRenderData.Rotation = msg.Rotation;
-                                RenderDataObjects.Add(newRenderData);
-                            }
-                            else if (msg.ID < RenderDataObjects.Count)
-                            {
-                                RenderDataObjects[msg.ID].Position = msg.Position;
-                                RenderDataObjects[msg.ID].Rotation = msg.Rotation;
-                            }
+                            RenderDataObjects[msg.ID].Color = msg.Color;
                         }
                         break;
                     #endregion
@@ -85,6 +67,8 @@ namespace TestProgram1
                         #endregion
                 }
             }
+
+            
 
             #region Draw particles
             spriteBatch.Begin();

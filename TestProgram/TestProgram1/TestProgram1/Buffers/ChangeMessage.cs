@@ -14,15 +14,18 @@ namespace TestProgram1
         public ChangeMessageType MessageType;
 
         [FieldOffset(4)]
-        public Vector2 Position;
-
-        [FieldOffset(8)]
-        public Color Color;
-
-        [FieldOffset(20)]
         public int ID;
 
+        [FieldOffset(8)]
+        public Vector2 Position;        
+
+        [FieldOffset(16)]
+        public float Rotation;
+
+        [FieldOffset(20)]
+        public Color Color;
+
         [FieldOffset(24)]
-        public float Rotation;        
+        public float ButtWorks;
     }
 }
