@@ -13,6 +13,7 @@ namespace TestProgram1
         static Random Random = new Random();
         Texture2D Texture;
         public Vector2 Position, AngleRange;
+
         float CurrentTime, MaxTime, Angle;
         List<Particle> ParticleList = new List<Particle>();        
 

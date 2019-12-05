@@ -7,7 +7,7 @@ namespace TestProgram1
 {
     public enum ChangeMessageType
     {
-        UpdateParticlePosition,
+        UpdateEmitter,
         CreateNewRenderData,
         DeleteRenderData,
     }

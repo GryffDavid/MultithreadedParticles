@@ -11,6 +11,8 @@ namespace TestProgram1
     class UpdateManager
     {
         public List<GameData> GameDataObjects { get; set; }
+        List<Emitter> EmitterList = new List<Emitter>();
+
         public DoubleBuffer DoubleBuffer;
         private GameTime GameTime;
 
@@ -19,11 +21,16 @@ namespace TestProgram1
 
         public Thread RunningThread;
 
+        public Stopwatch FrameWatch { get; set; }
+
         public UpdateManager(DoubleBuffer doubleBuffer, Game game)
         {
             DoubleBuffer = doubleBuffer;
             Game = game;
             GameDataObjects = new List<GameData>();
+
+            FrameWatch = new Stopwatch();
+            FrameWatch.Reset();
         }
 
         private void Run()
@@ -48,9 +55,23 @@ namespace TestProgram1
             DoubleBuffer.SubmitUpdate();
         }
 
-        public virtual void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
+            for (int i = 0; i < GameDataObjects.Count; i++)
+            {
+                GameData gameData = GameDataObjects[i];
 
+            }
+        }
+
+        public void CreateEmitter(Vector2 pos, Vector2 angR, out GameData gameData, out RenderData renderData)
+        {
+            gameData = new GameData();
+            gameData.Position = pos;
+            gameData.AngleRange = angR;
+
+            renderData = new RenderData();
+            renderData.Position = gameData.Position;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace TestProgram1
 
         //this is the field required when this message is of type UpdateCameraView
         [FieldOffset(4)]
-        public Vector2 ParticlePosition;
+        public Vector2 Position;
 
         //this field is used for all messages dealing with entities
         [FieldOffset(4)]
@@ -25,10 +25,10 @@ namespace TestProgram1
         
         //this is the field required when this message is of type CreateNewRenderData
         [FieldOffset(8)]
-        public Vector3 Position;
+        public Vector2 Position;
 
         [FieldOffset(20)]
-        public Vector3 Color;
+        public Vector2 AngleRange;
 
         //nothing is required when this message is of type DeleteRenderData
     }

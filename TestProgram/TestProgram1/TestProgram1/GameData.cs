@@ -9,6 +9,6 @@ namespace TestProgram1
     class GameData
     {
         //What is needed to perform updates
-        public Vector2 Position, Velocity;
+        public Vector2 Position, AngleRange;
     }
 }

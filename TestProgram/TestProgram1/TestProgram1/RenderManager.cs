@@ -17,11 +17,17 @@ namespace TestProgram1
         protected ChangeBuffer MessageBuffer;
         protected Game Game;
 
+        public Stopwatch FrameWatch { get; set; }
+
+
         public RenderManager(DoubleBuffer doubleBuffer, Game game)
         {
             DoubleBuffer = doubleBuffer;
             Game = game;
             RenderDataObjects = new List<RenderData>();
+
+            FrameWatch = new Stopwatch();
+            FrameWatch.Reset();
         }
 
         public virtual void LoadContent()
@@ -36,7 +42,7 @@ namespace TestProgram1
             DoubleBuffer.SubmitRender();
         }
 
-        public virtual void Draw(GameTime gameTime)
+        public void Draw(GameTime gameTime)
         {
 
         }

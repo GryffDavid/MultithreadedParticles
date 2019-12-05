@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System.Threading;
+using System.Diagnostics;
 
 namespace TestProgram1
 {    
@@ -21,6 +23,8 @@ namespace TestProgram1
         DoubleBuffer DoubleBuffer;
         RenderManager RenderManager;
         UpdateManager UpdateManager;
+
+        Stopwatch watch = new Stopwatch();
 
         public Game1()
         {
@@ -46,11 +50,14 @@ namespace TestProgram1
 
             UpdateManager = new UpdateManager(DoubleBuffer, this);
 
+            RenderData renderData;
+            GameData gameData;
+
+            UpdateManager.CreateEmitter(new Vector2(400, 400), new Vector2(0, 360), out gameData, out renderData);
+            RenderManager.RenderDataObjects.Add(renderData);
+            UpdateManager.GameDataObjects.Add(gameData);
+            
             UpdateManager.StartOnNewThread();
-
-
-
-            //EmitterList.Add(new Emitter(ParticleTexture, new Vector2(400, 400), new Vector2(0, 360)));
         }
         
         protected override void UnloadContent()
@@ -60,22 +67,30 @@ namespace TestProgram1
         
         protected override void Update(GameTime gameTime)
         {
-            foreach (Emitter emitter in EmitterList)
-            {
-                emitter.Update(gameTime);
-            }
             base.Update(gameTime);
         }
         
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
-            foreach (Emitter emitter in EmitterList)
-            {
-                emitter.Draw(spriteBatch);
-            }
-            spriteBatch.End();
+            //GraphicsDevice.Clear(Color.CornflowerBlue);
+            //spriteBatch.Begin();
+            //foreach (Emitter emitter in EmitterList)
+            //{
+            //    emitter.Draw(spriteBatch);
+            //}
+            //spriteBatch.End();
+
+            watch.Reset();
+            watch.Start();
+
+            DoubleBuffer.GlobalStartFrame(gameTime);
+
+            RenderManager.FrameWatch.Reset();
+            RenderManager.FrameWatch.Start();
+
+            graphics.GraphicsDevice.Clear(Color.Black);
+
+            RenderManager.DoFrame();
 
             base.Draw(gameTime);
         }
