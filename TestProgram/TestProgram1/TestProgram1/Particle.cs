@@ -12,8 +12,9 @@ namespace TestProgram1
     {
         Texture2D Texture;
         Vector2 Position, Velocity;
+        Color Color;
 
-        public Particle(Texture2D texture, Vector2 position, Vector2 velocity)
+        public Particle(Texture2D texture, Vector2 position, Vector2 velocity, Color Color)
         {
             Texture = texture;
             Position = position;
@@ -27,7 +28,7 @@ namespace TestProgram1
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture, Position, Color.White);
+            spriteBatch.Draw(Texture, Position, Color);
         }
     }
 }

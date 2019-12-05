@@ -13,10 +13,12 @@ namespace TestProgram1
         {
             Messages = new List<ChangeMessage>();
         }
+
         public void Add(ChangeMessage msg)
         {
             Messages.Add(msg);
         }
+
         public void Clear()
         {
             Messages.Clear();

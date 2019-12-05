@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System.Threading;
 using System.Diagnostics;
 
@@ -11,7 +12,6 @@ namespace TestProgram1
     class UpdateManager
     {
         public List<GameData> GameDataObjects { get; set; }
-        List<Emitter> EmitterList = new List<Emitter>();
 
         public DoubleBuffer DoubleBuffer;
         private GameTime GameTime;
@@ -22,6 +22,8 @@ namespace TestProgram1
         public Thread RunningThread;
 
         public Stopwatch FrameWatch { get; set; }
+
+        public MouseState CurrentMouseState, PreviousMouseState;
 
         public UpdateManager(DoubleBuffer doubleBuffer, Game game)
         {
@@ -57,21 +59,37 @@ namespace TestProgram1
 
         public void Update(GameTime gameTime)
         {
+            MessageBuffer.Clear();
+            CurrentMouseState = Mouse.GetState();
+
             for (int i = 0; i < GameDataObjects.Count; i++)
             {
                 GameData gameData = GameDataObjects[i];
+                Vector2 newPos = gameData.Position + gameData.Velocity;
 
+                ChangeMessage msg = new ChangeMessage();
+                msg.ID = i;
+                msg.MessageType = ChangeMessageType.UpdateParticlePosition;
+                msg.Position = newPos;
+                MessageBuffer.Add(msg);
+
+                gameData.Position = newPos;
             }
+
+            PreviousMouseState = CurrentMouseState;
         }
 
-        public void CreateEmitter(Vector2 pos, Vector2 angR, out GameData gameData, out RenderData renderData)
+
+        public void AddParticle(Vector2 pos, Vector2 vel, Color color, out GameData gameData, out RenderData renderData)
         {
             gameData = new GameData();
             gameData.Position = pos;
-            gameData.AngleRange = angR;
+            gameData.Velocity = vel;
+            gameData.Color = color;
 
             renderData = new RenderData();
             renderData.Position = gameData.Position;
+            renderData.Color = color;
         }
     }
 }

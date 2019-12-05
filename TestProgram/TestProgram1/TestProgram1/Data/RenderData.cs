@@ -10,5 +10,6 @@ namespace TestProgram1
     {
         //What is needed to draw the objects
         public Vector2 Position;
+        public Color Color;
     }
 }
