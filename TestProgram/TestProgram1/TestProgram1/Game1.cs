@@ -55,18 +55,21 @@ namespace TestProgram1
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
             ParticleTexture = Content.Load<Texture2D>("diamond");
+
             Font = Content.Load<SpriteFont>("Font");
 
             DoubleBuffer = new DoubleBuffer();
 
             RenderManager = new RenderManager(DoubleBuffer, this);
-            RenderManager.LoadContent();
 
             UpdateManager = new UpdateManager(DoubleBuffer, this);            
             UpdateManager.StartOnNewThread();
+
             //UpdateManager.RunningThread.IsBackground = false;
             //UpdateManager.RunningThread.Priority = ThreadPriority.AboveNormal;
+
             UpdateManager.RunningThread.Name = "UPDATE_MANAGER";
             Debug.WriteLine(UpdateManager.RunningThread.ManagedThreadId.ToString());          
         }
@@ -85,7 +88,7 @@ namespace TestProgram1
             {
                 for (int i = 0; i < 5; i++)
                 {
-                    UpdateManager.AddParticle(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), 
+                    UpdateManager.AddParticle(ParticleTexture, new Vector2(Mouse.GetState().X, Mouse.GetState().Y), 
                         new Vector2(0, 360), new Vector2(2, 3),
                         new Vector2(2, 2), Color.OrangeRed, Color.Yellow, 0.02f,
                         true, false, new Vector2(0, 360), new Vector2(-5, 5), 1f, new Vector2(2500, 4000),
@@ -141,5 +144,19 @@ namespace TestProgram1
         {
             return a + (float)Random.NextDouble() * (b - a);
         }
+
+        //public Texture2D RandomTexture()
+        //{
+        //    float num = (float)Random.NextDouble();
+
+        //    if (num > 0.5f)
+        //    {
+        //        return ParticleTexture;
+        //    }
+        //    else
+        //    {
+        //        return ParticleTexture2;
+        //    }
+        //}
     }
 }

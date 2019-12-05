@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Graphics;
 using System.Threading;
 using System.Diagnostics;
 
@@ -90,7 +90,7 @@ namespace TestProgram1
             }
         }
 
-        public void AddParticle(Vector2 pos, Vector2 angleRange, Vector2 speedRange, Vector2 scaleRange, 
+        public void AddParticle(Texture2D texture, Vector2 pos, Vector2 angleRange, Vector2 speedRange, Vector2 scaleRange, 
             Color startColor, Color endColor, float gravity, bool shrink, bool fade, Vector2 startingRotation, 
             Vector2 rotationIncrement, float startingTransparency, Vector2 timeRange,
             out ParticleData gameData, out RenderData renderData)
@@ -130,6 +130,7 @@ namespace TestProgram1
 
             renderData = new RenderData()
             {
+                Texture = texture,
                 Position = gameData.Position,
                 Color = startColor,
                 Rotation = Random.Next(0, 360),

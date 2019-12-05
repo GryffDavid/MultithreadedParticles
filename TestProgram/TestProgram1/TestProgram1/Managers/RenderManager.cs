@@ -19,11 +19,7 @@ namespace TestProgram1
         protected ChangeBuffer MessageBuffer;
         protected Game Game;
 
-        SpriteBatch spriteBatch;
-
-        Texture2D ParticleTexture;
-
-
+        //Texture2D ParticleTexture;
         //Texture2D texture,
         //Vector2 position, 
         //float angle,
@@ -56,12 +52,6 @@ namespace TestProgram1
             DoubleBuffer = doubleBuffer;
             Game = game;
             RenderDataObjects = new List<RenderData>();
-        }
-
-        public virtual void LoadContent()
-        {
-            ParticleTexture = Game.Content.Load<Texture2D>("diamond");
-            spriteBatch = new SpriteBatch(Game.GraphicsDevice);
         }
         
         public void DoFrame(SpriteBatch spriteBatch)
@@ -97,11 +87,11 @@ namespace TestProgram1
             #region Draw particles
             foreach (RenderData renderData in RenderDataObjects)
             {
-                spriteBatch.Draw(ParticleTexture, new
+                spriteBatch.Draw(renderData.Texture, new
                     Rectangle((int)renderData.Position.X, (int)renderData.Position.Y,
-                                   (int)(ParticleTexture.Width * renderData.Scale), (int)(ParticleTexture.Height * renderData.Scale)),
+                                   (int)(renderData.Texture.Width * renderData.Scale), (int)(renderData.Texture.Height * renderData.Scale)),
                     null, renderData.Color * renderData.Transparency, renderData.Rotation,
-                    new Vector2(ParticleTexture.Width / 2, ParticleTexture.Height / 2), SpriteEffects.None, 0);
+                    new Vector2(renderData.Texture.Width / 2, renderData.Texture.Height / 2), SpriteEffects.None, 0);
             }
             #endregion
 
