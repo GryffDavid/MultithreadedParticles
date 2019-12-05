@@ -80,7 +80,7 @@ namespace TestProgram1
 
             Emitter newEmitter4 = new Emitter(ParticleTexture2, new Vector2(800, 200), new Vector2(0, 180), new Vector2(6, 10),
             new Vector2(500, 1500), 0.99f, true, new Vector2(0, 360), new Vector2(-3, 3), new Vector2(1, 3),
-                Color.White, Color.White, 0.4f, -1f, 250, 5, true, new Vector2(400, 460), false,
+                Color.White, Color.White, 0.4f, -1f, 250, 5, true, new Vector2(400, 800), false,
                 null, true, true, null, null, null, true, new Vector2(0, 0), true, true, 2000, null, null, false);
 
             EmitterList.Add(newEmitter);

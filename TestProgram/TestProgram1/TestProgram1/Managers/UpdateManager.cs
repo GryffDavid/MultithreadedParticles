@@ -49,21 +49,8 @@ namespace TestProgram1
                     if (gameData.CurrentTime < gameData.MaxTime)
                         gameData.CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 }
-                
-                
-                gameData.Velocity.Y += gameData.Gravity;
 
-                
-
-                if (gameData.Friction != new Vector2(0, 0))
-                {
-                    gameData.Velocity.Y = MathHelper.Lerp(gameData.Velocity.Y, 0, gameData.Friction.Y * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f));
-                    gameData.Velocity.X = MathHelper.Lerp(gameData.Velocity.X, 0, gameData.Friction.X * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f));
-                }
-
-                Vector2 newPos = gameData.Position + gameData.Velocity;
-
-
+                #region Handle particle rotation
                 if (gameData.RotateVelocity == true)
                 {
                     Rot = (float)Math.Atan2(gameData.Velocity.Y, gameData.Velocity.X);
@@ -72,6 +59,9 @@ namespace TestProgram1
                 {
                     Rot = gameData.Rotation + MathHelper.ToRadians(gameData.RotationIncrement) * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f);
                 }
+                #endregion
+
+                gameData.Velocity.Y += gameData.Gravity;
 
                 #region Handle bouncing
                 if (gameData.CanBounce == true)
@@ -80,6 +70,7 @@ namespace TestProgram1
                         if (gameData.HardBounce == true)
                             gameData.Position.Y -= gameData.Velocity.Y;
 
+                        gameData.RotateVelocity = false;
                         gameData.Velocity.Y = (-gameData.Velocity.Y / 3);
                         gameData.Velocity.X = (gameData.Velocity.X / 3);
                         gameData.RotationIncrement = (gameData.RotationIncrement * 3);
@@ -118,27 +109,52 @@ namespace TestProgram1
                 }
                 #endregion
 
-                float newScale = gameData.CurrentScale;
-                float transparency = gameData.StartingTransparency;
+                #region Update position
+               
+                Vector2 newPos = gameData.Position + gameData.Velocity;
+                #endregion
+
+                #region Handle Friction
+                if (gameData.Friction != new Vector2(0, 0))
+                {
+                    gameData.Velocity.Y = MathHelper.Lerp(gameData.Velocity.Y, 0, gameData.Friction.Y * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f));
+                    gameData.Velocity.X = MathHelper.Lerp(gameData.Velocity.X, 0, gameData.Friction.X * ((float)gameTime.ElapsedGameTime.TotalSeconds * 60.0f));
+                }
+                #endregion
+                
 
                 float percTime = gameData.CurrentTime / gameData.MaxTime;
-                Color newCol = Color.Lerp(gameData.StartColor, gameData.EndColor, percTime);
-                
-                if (gameData.Shrink == true && gameData.Grow == false)
-                    newScale = gameData.MaxScale * (1.0f - ((1 / gameData.MaxTime) * (gameData.CurrentTime)));
-                
-                if (gameData.Grow == true && gameData.Shrink == false)
-                    newScale = gameData.MaxScale * ((1 / gameData.MaxTime) * (gameData.CurrentTime));
 
-                if (gameData.Shrink == true && gameData.Grow == true)
-                    newScale = gameData.MaxScale * (float)Math.Sin(Math.PI * percTime);
-
-
+                #region Fade transparency
+                float transparency = gameData.StartingTransparency;
                 if (gameData.Fade == true)
                 {
                     transparency = MathHelper.Lerp(gameData.StartingTransparency, 0, percTime);
                     //transparency = gameData.StartingTransparency * (1.0f - ((1 / (gameData.MaxTime + gameData.FadeDelay)) * (gameData.CurrentTime + gameData.CurrentFadeDelay)));
                 }
+                #endregion
+
+                #region Scale particles
+                float newScale = gameData.CurrentScale;
+
+                if (gameData.Shrink == true && gameData.Grow == false)
+                    newScale = gameData.MaxScale * (1.0f - ((1 / gameData.MaxTime) * (gameData.CurrentTime)));
+
+                if (gameData.Grow == true && gameData.Shrink == false)
+                    newScale = gameData.MaxScale * ((1 / gameData.MaxTime) * (gameData.CurrentTime));
+
+                if (gameData.Shrink == true && gameData.Grow == true)
+                    newScale = gameData.MaxScale * (float)Math.Sin(Math.PI * percTime);
+                #endregion
+
+                #region Fade Colours
+                Color newCol = Color.Lerp(gameData.StartColor, gameData.EndColor, percTime); 
+                #endregion
+
+                
+
+
+                
 
                 if (gameData.CurrentTime >= gameData.MaxTime)
                 {
