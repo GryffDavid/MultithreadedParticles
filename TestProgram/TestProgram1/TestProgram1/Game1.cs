@@ -36,6 +36,8 @@ namespace TestProgram1
 
         SpriteFont Font;
 
+        List<Emitter> EmitterList = new List<Emitter>();
+
         float CurrentTime;
 
         public Game1()
@@ -71,7 +73,11 @@ namespace TestProgram1
             //UpdateManager.RunningThread.Priority = ThreadPriority.AboveNormal;
 
             UpdateManager.RunningThread.Name = "UPDATE_MANAGER";
-            Debug.WriteLine(UpdateManager.RunningThread.ManagedThreadId.ToString());          
+            Debug.WriteLine(UpdateManager.RunningThread.ManagedThreadId.ToString());
+
+
+            Emitter newEmitter = new Emitter(RenderManager, UpdateManager, ParticleTexture, new Vector2(500, 500));
+            EmitterList.Add(newEmitter);
         }
         
         protected override void UnloadContent()
@@ -82,24 +88,29 @@ namespace TestProgram1
         
         protected override void Update(GameTime gameTime)
         {
-            CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            if (CurrentTime > 1)
+            foreach (Emitter emitter in EmitterList)
             {
-                for (int i = 0; i < 5; i++)
-                {
-                    UpdateManager.AddParticle(ParticleTexture, new Vector2(Mouse.GetState().X, Mouse.GetState().Y), 
-                        new Vector2(0, 360), new Vector2(2, 3),
-                        new Vector2(2, 2), Color.OrangeRed, Color.Yellow, 0.02f,
-                        true, false, new Vector2(0, 360), new Vector2(-5, 5), 1f, new Vector2(2500, 4000),
-                        out gameData, out renderData);
-
-                    RenderManager.RenderDataObjects.Add(renderData);
-                    UpdateManager.ParticleDataObjects.Add(gameData);
-                }
-
-                CurrentTime = 0;
+                emitter.Update(gameTime);
             }
+
+            //CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            //if (CurrentTime > 1)
+            //{
+            //    for (int i = 0; i < 5; i++)
+            //    {
+            //        UpdateManager.AddParticle(ParticleTexture, new Vector2(Mouse.GetState().X, Mouse.GetState().Y), 
+            //            new Vector2(0, 360), new Vector2(2, 3),
+            //            new Vector2(2, 2), Color.OrangeRed, Color.Yellow, 0.02f,
+            //            true, false, new Vector2(0, 360), new Vector2(-5, 5), 1f, new Vector2(2500, 4000),
+            //            out gameData, out renderData);
+
+            //        RenderManager.RenderDataObjects.Add(renderData);
+            //        UpdateManager.ParticleDataObjects.Add(gameData);
+            //    }
+
+            //    CurrentTime = 0;
+            //}
 
             base.Update(gameTime);
         }
