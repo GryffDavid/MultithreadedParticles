@@ -37,7 +37,30 @@ namespace TestProgram1
             //reset the values
             Reset();
         }
-        
+
+        public void Reset()
+        {
+            //reset the buffer indexes
+            currentUpdateBuffer = 0;
+            currentRenderBuffer = 1;
+
+            //set all events to non-signaled
+            renderFrameStart.Reset();
+            renderFrameEnd.Reset();
+            updateFrameStart.Reset();
+            updateFrameEnd.Reset();
+        }
+
+        public void CleanUp()
+        {
+            //relese system resources
+            renderFrameStart.Close();
+            renderFrameEnd.Close();
+            updateFrameStart.Close();
+            updateFrameEnd.Close();
+        }
+
+
         public void StartUpdateProcessing(out ChangeBuffer updateBuffer, out GameTime gameTime)
         {
             //wait for start signal
@@ -48,6 +71,7 @@ namespace TestProgram1
             //get the game time
             gameTime = this.gameTime;
         }
+
         public void StartRenderProcessing(out ChangeBuffer renderBuffer, out GameTime gameTime)
         {
             //wait for start signal
@@ -57,13 +81,6 @@ namespace TestProgram1
             renderBuffer = buffers[currentRenderBuffer];
             //ret the game time
             gameTime = this.gameTime;
-        }
-
-        private void SwapBuffers()
-        {
-            currentRenderBuffer = currentUpdateBuffer;
-            currentUpdateBuffer = (currentUpdateBuffer + 1) % 2;
-            ChangeMessageCount = buffers[currentRenderBuffer].Messages.Count;
         }
 
         public void SubmitUpdate()
@@ -79,6 +96,13 @@ namespace TestProgram1
             renderFrameEnd.Set();
         }
 
+        private void SwapBuffers()
+        {
+            currentRenderBuffer = currentUpdateBuffer;
+            currentUpdateBuffer = (currentUpdateBuffer + 1) % 2;
+            ChangeMessageCount = buffers[currentRenderBuffer].Messages.Count;
+        }
+
         public void GlobalStartFrame(GameTime gameTime)
         {
             this.gameTime = gameTime;
@@ -88,31 +112,11 @@ namespace TestProgram1
             renderFrameStart.Set();
             updateFrameStart.Set();
         }
+
         public void GlobalSynchronize()
         {
             renderFrameEnd.WaitOne();
             updateFrameEnd.WaitOne();
-        }
-
-        public void Reset()
-        {
-            //reset the buffer indexes
-            currentUpdateBuffer = 0;
-            currentRenderBuffer = 1;
-
-            //set all events to non-signaled
-            renderFrameStart.Reset();
-            renderFrameEnd.Reset();
-            updateFrameStart.Reset();
-            updateFrameEnd.Reset();
-        }
-        public void CleanUp()
-        {
-            //relese system resources
-            renderFrameStart.Close();
-            renderFrameEnd.Close();
-            updateFrameStart.Close();
-            updateFrameEnd.Close();
         }
     }
 }

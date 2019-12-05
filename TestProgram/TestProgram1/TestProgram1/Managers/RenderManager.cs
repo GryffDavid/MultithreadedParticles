@@ -21,8 +21,6 @@ namespace TestProgram1
 
         public Stopwatch FrameWatch { get; set; }
 
-       
-
         SpriteBatch spriteBatch;
         Texture2D ParticleTexture;
 
@@ -55,12 +53,16 @@ namespace TestProgram1
             {
                 switch (msg.MessageType)
                 {
+                    #region Update Particle Position
                     case ChangeMessageType.UpdateParticlePosition:
                         {
                             RenderDataObjects[msg.ID].Position = msg.Position;
                         }
                         break;
+                    
+                    #endregion
 
+                    #region Create New Render Data
                     case ChangeMessageType.CreateNewRenderData:
                         {
                             if (RenderDataObjects.Count == msg.ID)
@@ -71,12 +73,16 @@ namespace TestProgram1
                             }
                             else if (msg.ID < RenderDataObjects.Count)
                             {
-                                RenderDataObjects[msg.ID].Position = msg.Position;                                
+                                RenderDataObjects[msg.ID].Position = msg.Position;
                             }
                         }
-                        break;
+                        break; 
+                    #endregion
 
                     case ChangeMessageType.DeleteRenderData:
+                        {
+                            //Don't update the changes - they'll be wiped on the next loop
+                        }
                         break;
                 }
             }
@@ -84,7 +90,7 @@ namespace TestProgram1
             spriteBatch.Begin();
             foreach (RenderData renderData in RenderDataObjects)
             {
-                spriteBatch.Draw(ParticleTexture, renderData.Position, renderData.Color);
+                spriteBatch.Draw(ParticleTexture, renderData.Position, Color.White);
             }
             spriteBatch.End();
         }

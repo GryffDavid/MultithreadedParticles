@@ -16,7 +16,7 @@ namespace TestProgram1
         public DoubleBuffer DoubleBuffer;
         private GameTime GameTime;
 
-        protected ChangeBuffer MessageBuffer;
+        public ChangeBuffer MessageBuffer;
         protected Game Game;
 
         public Thread RunningThread;
@@ -24,6 +24,7 @@ namespace TestProgram1
         public Stopwatch FrameWatch { get; set; }
 
         public MouseState CurrentMouseState, PreviousMouseState;
+        Rectangle screenRect = new Rectangle(0, 0, 1280, 720);
 
         public UpdateManager(DoubleBuffer doubleBuffer, Game game)
         {
@@ -48,6 +49,8 @@ namespace TestProgram1
             ThreadStart threadStart = new ThreadStart(Run);
             RunningThread = new Thread(threadStart);
             RunningThread.Start();
+
+            Debug.WriteLine("Update Thread Started " + RunningThread.ManagedThreadId.ToString());
         }
 
         public void DoFrame()
@@ -66,30 +69,28 @@ namespace TestProgram1
             {
                 GameData gameData = GameDataObjects[i];
                 Vector2 newPos = gameData.Position + gameData.Velocity;
+                
+                gameData.Position = newPos;
 
                 ChangeMessage msg = new ChangeMessage();
                 msg.ID = i;
                 msg.MessageType = ChangeMessageType.UpdateParticlePosition;
                 msg.Position = newPos;
                 MessageBuffer.Add(msg);
-
-                gameData.Position = newPos;
             }
 
             PreviousMouseState = CurrentMouseState;
         }
 
 
-        public void AddParticle(Vector2 pos, Vector2 vel, Color color, out GameData gameData, out RenderData renderData)
+        public void AddParticle(Vector2 pos, Vector2 vel, out GameData gameData, out RenderData renderData)
         {
             gameData = new GameData();
             gameData.Position = pos;
             gameData.Velocity = vel;
-            gameData.Color = color;
 
             renderData = new RenderData();
             renderData.Position = gameData.Position;
-            renderData.Color = color;
         }
     }
 }

@@ -25,17 +25,16 @@ namespace TestProgram1
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D ParticleTexture;
-        SpriteFont Font;
 
         DoubleBuffer DoubleBuffer;
         RenderManager RenderManager;
         UpdateManager UpdateManager;
 
-        static Random Random = new Random();
-
         Stopwatch watch = new Stopwatch();
 
-        float CurrentTime, MaxTime;
+        static Random Random = new Random();
+
+        float CurrentTime;
 
         public Game1()
         {
@@ -43,6 +42,9 @@ namespace TestProgram1
             Content.RootDirectory = "Content";
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
+
+
+            Debug.WriteLine("Render Thread Started " + Thread.CurrentThread.ManagedThreadId.ToString());
         }
         
         protected override void Initialize()
@@ -54,7 +56,6 @@ namespace TestProgram1
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             ParticleTexture = Content.Load<Texture2D>("diamond");
-            Font = Content.Load<SpriteFont>("SpriteFont");
 
             DoubleBuffer = new DoubleBuffer();
 
@@ -62,23 +63,20 @@ namespace TestProgram1
             RenderManager.LoadContent();
 
             UpdateManager = new UpdateManager(DoubleBuffer, this);            
-            UpdateManager.StartOnNewThread();
+            
 
-            RenderData renderData;
-            GameData gameData;
+            //RenderData renderData;
+            //GameData gameData;
 
-            UpdateManager.AddParticle(new Vector2(400, 400), new Vector2(0, -1), new Color(Random.Next(0, 255)/255f, Random.Next(0, 255)/255f, Random.Next(0, 255)/255f), out gameData, out renderData);
-            RenderManager.RenderDataObjects.Add(renderData);
-            UpdateManager.GameDataObjects.Add(gameData);
-
-            //UpdateManager.AddParticle(new Vector2(400, 405), new Vector2(0, -1), out gameData, out renderData);
+            //UpdateManager.AddParticle(new Vector2(400, 400), new Vector2(0, -1), out gameData, out renderData);
             //RenderManager.RenderDataObjects.Add(renderData);
             //UpdateManager.GameDataObjects.Add(gameData);
+
+            UpdateManager.StartOnNewThread();
         }
         
         protected override void UnloadContent()
         {
-
 
         }
         
@@ -86,31 +84,22 @@ namespace TestProgram1
         {
             CurrentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if (CurrentTime > 150)
+            if (CurrentTime > 100)
             {
                 RenderData renderData;
                 GameData gameData;
 
-                UpdateManager.AddParticle(new Vector2(400, 400), new Vector2(0, Random.Next(-5, 5)), new Color(Random.Next(0, 255) / 255f, Random.Next(0, 255) / 255f, Random.Next(0, 255) / 255f), out gameData, out renderData);
+                UpdateManager.AddParticle(new Vector2(400, 400), new Vector2(Random.Next(-4, 4), Random.Next(-4, 4)), out gameData, out renderData);
                 RenderManager.RenderDataObjects.Add(renderData);
                 UpdateManager.GameDataObjects.Add(gameData);
 
                 CurrentTime = 0;
             }
-
             base.Update(gameTime);
         }
         
         protected override void Draw(GameTime gameTime)
         {
-            //GraphicsDevice.Clear(Color.CornflowerBlue);
-            //spriteBatch.Begin();
-            //foreach (Emitter emitter in EmitterList)
-            //{
-            //    emitter.Draw(spriteBatch);
-            //}
-            //spriteBatch.End();
-
             watch.Reset();
             watch.Start();
 
@@ -120,14 +109,8 @@ namespace TestProgram1
             RenderManager.FrameWatch.Start();
 
             graphics.GraphicsDevice.Clear(Color.Black);
-            spriteBatch.Begin();
-            spriteBatch.DrawString(Font, "ChangeMessageCount: " + DoubleBuffer.ChangeMessageCount.ToString(), new Vector2(0, 0), Color.White);
-            spriteBatch.DrawString(Font, "RenderDataObjects: " + RenderManager.RenderDataObjects.Count.ToString(), new Vector2(0, 24), Color.White);
-            spriteBatch.DrawString(Font, "ParticleDataObjects: " + UpdateManager.GameDataObjects.Count.ToString(), new Vector2(0, 48), Color.White);
-            spriteBatch.End();
 
             RenderManager.DoFrame();
-
 
             base.Draw(gameTime);
         }
